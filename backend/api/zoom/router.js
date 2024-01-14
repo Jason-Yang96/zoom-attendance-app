@@ -11,11 +11,5 @@ router
     //     setZoomAuthHeader,
     //     controller.participantProxy
     // )
-    .use(
-        '/api',
-        getUser,
-        refreshToken,
-        setZoomAuthHeader,
-        controller.participantProxy
-    )
+    .use('/api', getUser, refreshToken, setZoomAuthHeader, controller.proxy)
 module.exports = router
