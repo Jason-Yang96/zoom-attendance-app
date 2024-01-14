@@ -4,7 +4,8 @@ const store = require('../../util/store')
 // API PROXY MIDDLEWARE ==========================================================
 // Middleware to automatically refresh an auth token in case of expiration
 const getUser = async (req, res, next) => {
-  const zoomUserId = req?.session?.user
+    console.log('0. Check userId in the current session')
+    const zoomUserId = req?.session?.user
   if (!zoomUserId) {
     return next(
       new Error(
@@ -14,6 +15,7 @@ const getUser = async (req, res, next) => {
   }
 
   try {
+      console.log('get user by id from redis store')
     const appUser = await store.getUser(zoomUserId)
     req.appUser = appUser
     return next()
