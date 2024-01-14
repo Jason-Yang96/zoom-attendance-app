@@ -1,9 +1,9 @@
 import Button from "react-bootstrap/Button";
 import "./UserInfo.css"
 
-function UserInfo(props) {
+function ParticipantInfo(props) {
     const {
-        user,
+        participant,
         showInClientOAuthPrompt,
         showGuestModePrompt,
         onClick,
@@ -52,17 +52,17 @@ function UserInfo(props) {
                 <Button onClick={onClick}>promptAuthorize</Button>
             </>
         );
-    } else if (!user) {
+    } else if (!participant) {
         // loading user (first attempt to fetch user will fail if
         // no access token/ in-client add)
-        return <p className="p-loading">Loading Zoom User . . .</p>;
+        return <p className="p-loading">Loading Zoom Participant . . .</p>;
     }
 
     return (
         <div>
-            <pre className="pre-userinfo">{JSON.stringify(user, null, 2)}</pre>
+            <pre className="pre-userinfo">{JSON.stringify(participant, null, 2)}</pre>
         </div>
     );
 }
 
-export default UserInfo;
+export default ParticipantInfo;
