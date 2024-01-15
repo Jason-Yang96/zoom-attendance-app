@@ -6,6 +6,7 @@ module.exports = {
     proxy: createProxyMiddleware({
         target: process.env.ZOOM_HOST,
         changeOrigin: true,
+        selfHandleResponse: true,
         pathRewrite: {
             '^/zoom/api': '',
         },
@@ -35,7 +36,7 @@ module.exports = {
                                 },
                             }
                         )
-                        body = JSON.stringify(processDataResponse.data)
+                        body = processDataResponse.data
                         console.log(`Zoom API Proxy => participant`)
                     } catch (error) {
                         console.error(error)
@@ -46,7 +47,7 @@ module.exports = {
                     console.log(
                         `Zoom API Proxy => ${req.method} ${req.path} -> [${proxyRes.statusCode}] ${body}`
                     )
-                    res.end()
+                    res.json(body)
                 })
         },
     }),
