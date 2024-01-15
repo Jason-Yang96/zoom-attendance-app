@@ -61,7 +61,7 @@ const getZoomUser = async (accessToken) => {
 const getZoomParticipant = async (accessToken) => {
     return await axios({
         url: `${process.env.ZOOM_HOST}/v2/report/meetings/
-637d8707237/participants`,
+84143883166/participants`,
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

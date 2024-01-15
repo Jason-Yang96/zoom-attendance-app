@@ -131,7 +131,7 @@ export const Authorization = (props) => {
         async function fetchParticipant() {
             try {
                 // An example of using the Zoom REST API via proxy
-                const response = await fetch(`/zoom/api/v2/report/meetings/6378707237/participants`);
+                const response = await fetch(`/zoom/api/v2/report/meetings/84143883166/participants?page_size=300`);
                 if (response.status !== 200) throw new Error();
                 const participant = await response.json();
                 handleParticipant(participant);
