@@ -127,11 +127,14 @@ export const Authorization = (props) => {
                 // setError("There was an error getting your user information");
             }
         }
-
+// `/zoom/api/v2/report/meetings/84143883166/participants?page_size=300`
+// `/zoom/api/v2/accounts/3SwPi7NlTb-EyOwj1Z3XYg/metrics/meetings/84143883166/participants`
+// `/zoom/api/v2/metrics/meetings/84143883166/participants`
+// `/zoom/api/v2/metrics/meetings/84143883166/participants?page_size=300&type=past&from=2024-01-16&to=2024-01-16`
         async function fetchParticipant() {
             try {
                 // An example of using the Zoom REST API via proxy
-                const response = await fetch(`/zoom/api/v2/report/meetings/84143883166/participants?page_size=300`);
+                const response = await fetch(`/zoom/api/v2/metrics/meetings/84143883166/participants/?type=past&from=2024-01-16&to=2024-01-16`);
                 if (response.status !== 200) throw new Error();
                 const participant = await response.json();
                 handleParticipant(participant);
