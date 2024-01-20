@@ -195,7 +195,7 @@ function App() {
 
     return (
         <div className="App">
-            <h1>Hello{user ? ` ${user.first_name} ${user.last_name}` : " Zoom Apps user"}!</h1>
+            <h1>행복메타{user ? ` ${user.first_name} ${user.last_name}` : " 출석 체크 앱"}!</h1>
             <p>{`User Context Status: ${userContextStatus}`}</p>
             <p>
                 {runningContext ?
@@ -204,7 +204,7 @@ function App() {
                 }
             </p>
 
-            <ApiScrollview/>
+            {/*<ApiScrollview/>*/}
             <Authorization
                 handleError={setError}
                 handleUserContextStatus={setUserContextStatus}

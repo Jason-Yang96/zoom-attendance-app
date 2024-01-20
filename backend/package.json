@@ -1,5 +1,5 @@
 {
-  "name": "za-reference-node",
+  "name": "backend-api",
   "version": "0.1.0",
   "description": "Zoom Reference App built on NodeJS & Express",
   "private": true,

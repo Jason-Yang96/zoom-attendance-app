@@ -2,12 +2,12 @@
 import React, {useEffect, useState} from "react";
 import {Route, Redirect, useLocation} from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import Auth0User from "./Auth0User";
-import Header from "./Header";
-import IFrame from "./IFrame";
-import Image from "./Image";
-import UserInfo from "./UserInfo";
 import ParticipantInfo from "./ParticipantInfo";
+import Header from "./Header";
+// import Auth0User from "./Auth0User";
+// import IFrame from "./IFrame";
+// import Image from "./Image";
+// import UserInfo from "./UserInfo";
 
 export const Authorization = (props) => {
     const {
@@ -127,11 +127,14 @@ export const Authorization = (props) => {
                 // setError("There was an error getting your user information");
             }
         }
-
+// `/zoom/api/v2/report/meetings/84143883166/participants?page_size=300`
+// `/zoom/api/v2/accounts/3SwPi7NlTb-EyOwj1Z3XYg/metrics/meetings/84143883166/participants`
+// `/zoom/api/v2/metrics/meetings/84143883166/participants`
+// `/zoom/api/v2/metrics/meetings/84143883166/participants?page_size=300&type=past&from=2024-01-16&to=2024-01-16`
         async function fetchParticipant() {
             try {
                 // An example of using the Zoom REST API via proxy
-                const response = await fetch(`/zoom/api/v2/report/meetings/84143883166/participants?page_size=300`);
+                const response = await fetch(`/zoom/api/v2/metrics/meetings/${process.env.REACT_APP_MEETING_ID}/participants/?type=past&page_size=300`);
                 if (response.status !== 200) throw new Error();
                 const participant = await response.json();
                 handleParticipant(participant);
@@ -171,10 +174,10 @@ export const Authorization = (props) => {
 
             <div>
                 <Header
-                    navLinks={{userInfo: "User Info", participantInfo: "Participant Info", iframe: "IFrame", image: "Image"}}
+                    navLinks={{/*userInfo: "User Info", */participantInfo: "Participant Info"/*, iframe: "IFrame", image: "Image"*/}}
                 />
                 <Route path="" exact>
-                    <Redirect to="/participant"/>
+                    <Redirect to="/participantinfo"/>
                 </Route>
                 <Route path="/participantinfo">
                     <ParticipantInfo
@@ -185,24 +188,24 @@ export const Authorization = (props) => {
                         showInClientOAuthPrompt={showInClientOAuthPrompt}
                     />
                 </Route>
-                <Route path="/userinfo">
-                    <UserInfo
-                        user={user}
-                        onClick={inGuestMode ? promptAuthorize : authorize}
-                        showGuestModePrompt={inGuestMode}
-                        userContextStatus={userContextStatus}
-                        showInClientOAuthPrompt={showInClientOAuthPrompt}
-                    />
-                </Route>
-                <Route path="/image">
-                    <Image/>
-                </Route>
-                <Route path="/iframe">
-                    <IFrame/>
-                </Route>
+                {/*<Route path="/userinfo">*/}
+                {/*    <UserInfo*/}
+                {/*        user={user}*/}
+                {/*        onClick={inGuestMode ? promptAuthorize : authorize}*/}
+                {/*        showGuestModePrompt={inGuestMode}*/}
+                {/*        userContextStatus={userContextStatus}*/}
+                {/*        showInClientOAuthPrompt={showInClientOAuthPrompt}*/}
+                {/*    />*/}
+                {/*</Route>*/}
+                {/*<Route path="/image">*/}
+                {/*    <Image/>*/}
+                {/*</Route>*/}
+                {/*<Route path="/iframe">*/}
+                {/*    <IFrame/>*/}
+                {/*</Route>*/}
             </div>
-            <Header navLinks={{auth0Data: "Auth0 User Data"}}/>
-            <Auth0User user={user}/>
+            {/*<Header navLinks={{auth0Data: "Auth0 User Data"}}/>*/}
+            {/*<Auth0User user={user}/>*/}
         </>
     );
 };

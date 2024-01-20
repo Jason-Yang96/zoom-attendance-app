@@ -17,7 +17,6 @@ const envars = [
     'ZOOM_APP_OAUTH_STATE_SECRET',
     'REDIS_URL',
     'REDIS_ENCRYPTION_KEY',
-    'MEETING_ID',
 ]
 
 envars.forEach((envar) => {
