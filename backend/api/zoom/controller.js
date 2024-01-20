@@ -28,7 +28,7 @@ module.exports = {
                     body = Buffer.concat(body).toString()
                     try {
                         const processDataResponse = await axios.post(
-                            'http://processlogic.link/att/data/meeting',
+                            'https://processlogic.link/att/data/meeting',
                             JSON.parse(body),
                             {
                                 headers: {

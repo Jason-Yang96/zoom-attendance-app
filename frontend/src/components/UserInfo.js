@@ -1,5 +1,5 @@
 import Button from "react-bootstrap/Button";
-import "./UserInfo.css"
+import "./ParticipantInfo.css"
 
 function UserInfo(props) {
     const {
