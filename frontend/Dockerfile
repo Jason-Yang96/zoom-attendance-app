@@ -8,6 +8,10 @@ WORKDIR /home/node/app
 # where available (npm@5+)
 COPY package*.json ./
 
+#RUN useradd jaeseonyang
+#USER jaeseonyang
+
+
 RUN npm install
 RUN npm install --only=dev
 RUN npm install chokidar -D
