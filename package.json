@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "docker-compose": "^0.24.3",
     "nginx": "^1.0.8",
     "react-scripts": "^5.0.1",
     "sudo": "^1.0.3"
