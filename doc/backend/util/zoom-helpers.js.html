@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>zoom-helpers.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "backend\\util\\zoom-helpers.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>zoom-helpers.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-keyword">const</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">'crypto'</span>)
+<span class="hljs-keyword">const</span> base64url = <span class="hljs-built_in">require</span>(<span class="hljs-string">'base64url'</span>)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>The Zoom App context header is an encrypted JSON string.
+This function unpacks, decrypts, and parses the context from the header.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">decryptZoomAppContext</span>(<span class="hljs-params">
+    context,
+    secretKey = process.env.ZOOM_APP_CLIENT_SECRET
+</span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Decode base64</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">let</span> buf = Buffer.from(context, <span class="hljs-string">'base64'</span>)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Get iv length (1 byte)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">const</span> ivLength = buf.readUInt8()
+    buf = buf.subarray(<span class="hljs-number">1</span>)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>Get iv</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">const</span> iv = buf.subarray(<span class="hljs-number">0</span>, ivLength)
+    buf = buf.subarray(ivLength)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>Get aad length (2 bytes)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">const</span> aadLength = buf.readUInt16LE()
+    buf = buf.subarray(<span class="hljs-number">2</span>)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<p>Get aad</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">const</span> aad = buf.subarray(<span class="hljs-number">0</span>, aadLength)
+    buf = buf.subarray(aadLength)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8"></a>
+</div>
+<p>Get cipher length (4 bytes)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">const</span> cipherLength = buf.readInt32LE()
+    buf = buf.subarray(<span class="hljs-number">4</span>)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9"></a>
+</div>
+<p>Get cipherText</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">const</span> cipherText = buf.subarray(<span class="hljs-number">0</span>, cipherLength)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10"></a>
+</div>
+<p>Get tag</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">const</span> tag = buf.subarray(cipherLength)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11"></a>
+</div>
+<p>AES/GCM decryption</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">const</span> decipher = crypto
+        .createDecipheriv(
+            <span class="hljs-string">'aes-256-gcm'</span>,
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12"></a>
+</div>
+<p>hash the secret key first</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">            crypto.createHash(<span class="hljs-string">'sha256'</span>).update(secretKey).digest(),
+            iv
+        )
+        .setAAD(aad)
+        .setAuthTag(tag)
+        .setAutoPadding(<span class="hljs-literal">false</span>)
+
+    <span class="hljs-keyword">const</span> decrypted =
+        decipher.update(cipherText, <span class="hljs-string">'hex'</span>, <span class="hljs-string">'utf-8'</span>) + decipher.final(<span class="hljs-string">'utf-8'</span>)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13"></a>
+</div>
+<p>Return JS object</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(decrypted)
+}
+
+<span class="hljs-keyword">const</span> createRequestParamString = <span class="hljs-function">(<span class="hljs-params">params</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> requestParams = <span class="hljs-keyword">new</span> URLSearchParams()
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> param <span class="hljs-keyword">in</span> params) {
+        <span class="hljs-keyword">const</span> value = params[param]
+        requestParams.set(param, value)
+    }
+
+    <span class="hljs-keyword">return</span> requestParams.toString()
+}
+
+<span class="hljs-keyword">const</span> hmacBase64 = <span class="hljs-function">(<span class="hljs-params">str</span>) =&gt;</span>
+    crypto
+        .createHmac(<span class="hljs-string">'sha256'</span>, process.env.ZOOM_APP_OAUTH_STATE_SECRET)
+        .update(str)
+        .digest(<span class="hljs-string">'base64'</span>)
+
+<span class="hljs-keyword">const</span> generateCodeVerifier = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">return</span> crypto.randomBytes(<span class="hljs-number">64</span>).toString(<span class="hljs-string">'hex'</span>)
+}
+
+<span class="hljs-keyword">const</span> generateCodeChallenge = <span class="hljs-function">(<span class="hljs-params">codeVerifier</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> base64Digest = crypto
+        .createHash(<span class="hljs-string">'sha256'</span>)
+        .update(codeVerifier)
+        .digest(<span class="hljs-string">'base64'</span>)
+    <span class="hljs-keyword">return</span> base64url.fromBase64(base64Digest)
+}
+
+<span class="hljs-keyword">const</span> generateState = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> ts = crypto.randomBytes(<span class="hljs-number">64</span>).toString(<span class="hljs-string">'hex'</span>)
+    <span class="hljs-keyword">const</span> hmac = hmacBase64(ts)
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">encodeURI</span>([hmac, ts].join(<span class="hljs-string">'.'</span>)).replace(<span class="hljs-string">'+'</span>, <span class="hljs-string">''</span>) <span class="hljs-comment">// the replace is important because Auth0 encodes their returned state, eg with space instead of +</span>
+}
+
+<span class="hljs-built_in">module</span>.exports = {
+    decryptZoomAppContext,
+    createRequestParamString,
+    generateCodeVerifier,
+    generateCodeChallenge,
+    generateState,
+}
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

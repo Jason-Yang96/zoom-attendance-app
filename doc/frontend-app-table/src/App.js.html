@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>App.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "frontend-app-table\\src\\App.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>App.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-keyword">import</span> React, { useState } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { useTable, useGlobalFilter, useSortBy } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-table'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./App.css'</span>
+<span class="hljs-keyword">import</span> Search <span class="hljs-keyword">from</span> <span class="hljs-string">'./Component/Search'</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">DataFetcher</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">const</span> [data, setData] = useState([])
+    <span class="hljs-keyword">const</span> [loaded, setLoaded] = useState(<span class="hljs-literal">false</span>)
+
+    <span class="hljs-keyword">const</span> columns = React.useMemo(
+        <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> [
+            {
+                <span class="hljs-attr">Header</span>: <span class="hljs-string">'이름'</span>,
+                <span class="hljs-attr">accessor</span>: <span class="hljs-string">'name'</span>,
+            },
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>CheckList 항목을 개별 셀로 분리</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">            ...Array.from({ <span class="hljs-attr">length</span>: <span class="hljs-number">8</span> }).map(<span class="hljs-function">(<span class="hljs-params">_, i</span>) =&gt;</span> ({
+                <span class="hljs-attr">Header</span>: <span class="hljs-string">`<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>교시`</span>,
+                <span class="hljs-attr">accessor</span>: <span class="hljs-function">(<span class="hljs-params">d</span>) =&gt;</span> d.checkList[i],
+                <span class="hljs-attr">id</span>: <span class="hljs-string">`checkList-<span class="hljs-subst">${i}</span>`</span>,
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Cell에 조건부 스타일 적용</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">                Cell: <span class="hljs-function">(<span class="hljs-params">{ value }</span>) =&gt;</span> (
+                    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>
+                        <span class="hljs-attr">className</span>=<span class="hljs-string">"cell-check-list"</span>
+                        <span class="hljs-attr">style</span>=<span class="hljs-string">{{</span>
+                            <span class="hljs-attr">color:</span>
+                                <span class="hljs-attr">value</span> === <span class="hljs-string">1</span> ? '#<span class="hljs-attr">578C45</span>' <span class="hljs-attr">:</span> <span class="hljs-attr">value</span> === <span class="hljs-string">5</span> ? '#<span class="hljs-attr">5C5C5C</span>' <span class="hljs-attr">:</span> '<span class="hljs-attr">inherit</span>',
+                        }}
+                    &gt;</span>
+                        {value}
+                    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+                ),
+            })),
+        ],
+        [],
+    )
+
+    <span class="hljs-keyword">const</span> {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        setGlobalFilter,
+    } = useTable({ columns, data }, useGlobalFilter, useSortBy)
+
+    <span class="hljs-keyword">const</span> apiUrl = <span class="hljs-string">'http://processlogic.link/example'</span>
+
+    <span class="hljs-keyword">const</span> fetchData = <span class="hljs-keyword">async</span> () =&gt; {
+        <span class="hljs-keyword">try</span> {
+            <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> fetch(apiUrl, { <span class="hljs-attr">mode</span>: <span class="hljs-string">'cors'</span> })
+            <span class="hljs-keyword">if</span> (!response.ok) {
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`HTTP error! status: <span class="hljs-subst">${response.status}</span>`</span>)
+            }
+            <span class="hljs-keyword">const</span> jsonData = <span class="hljs-keyword">await</span> response.json()
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>console.log(&quot;api데이터&quot;, jsonData);</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+            if (Array.isArray(jsonData.data)) {
+                setData(jsonData.data)
+                setLoaded(true)
+            } else {
+                console.error('Expected an array but got:', jsonData.data)
+            }
+        } catch (error) {
+            console.error('Error fetching data: ', error)
+        }
+    }
+
+    return (
+        &lt;div className="container"&gt;
+            &lt;button onClick={fetchData} className="button-22 take_data_button"&gt;
+                데이터 받기
+            &lt;/button&gt;
+            {loaded &amp;&amp; ( // 데이터가 로드되었을 때만 표시
+                &lt;&gt;
+                    &lt;Search onSubmit={setGlobalFilter} /&gt;
+                    &lt;table {...getTableProps()} className="table"&gt;
+                        &lt;thead&gt;
+                        {headerGroups.map((headerGroup) =&gt; (
+                            &lt;tr {...headerGroup.getHeaderGroupProps()} className="tr"&gt;
+                                {headerGroup.headers.map((column) =&gt; (
+                                    &lt;th
+                                        {...column.getHeaderProps(column.getSortByToggleProps())}
+                                        className="th"
+                                    &gt;
+                                        {column.render('Header')}
+                                    &lt;/th&gt;
+                                ))}
+                            &lt;/tr&gt;
+                        ))}
+                        &lt;/thead&gt;
+                        &lt;tbody {...getTableBodyProps()}&gt;
+                        {rows.map((row) =&gt; {
+                            prepareRow(row)
+                            return (
+                                &lt;tr {...row.getRowProps()} className="tr"&gt;
+                                    {row.cells.map((cell) =&gt; (
+                                        &lt;td {...cell.getCellProps()} className="td"&gt;
+                                            {cell.render('Cell')}
+                                        &lt;/td&gt;
+                                    ))}
+                                &lt;/tr&gt;
+                            )
+                        })}
+                        &lt;/tbody&gt;
+                    &lt;/table&gt;
+                &lt;/&gt;
+            )}
+        &lt;/div&gt;
+    )
+}
+
+export default DataFetcher
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

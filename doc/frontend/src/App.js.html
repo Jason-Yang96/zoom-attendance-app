@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>App.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "frontend\\src\\App.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>App.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-comment">/* globals zoomSdk */</span>
+<span class="hljs-keyword">import</span> {useLocation, useHistory} <span class="hljs-keyword">from</span> <span class="hljs-string">"react-router-dom"</span>;
+<span class="hljs-keyword">import</span> {useCallback, useEffect, useState} <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+<span class="hljs-keyword">import</span> {apis} <span class="hljs-keyword">from</span> <span class="hljs-string">"./apis"</span>;
+<span class="hljs-keyword">import</span> {Authorization} <span class="hljs-keyword">from</span> <span class="hljs-string">"./components/Authorization"</span>;
+<span class="hljs-keyword">import</span> ApiScrollview <span class="hljs-keyword">from</span> <span class="hljs-string">"./components/ApiScrollview"</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">"./App.css"</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">"bootstrap/dist/css/bootstrap.min.css"</span>;
+
+<span class="hljs-keyword">let</span> once = <span class="hljs-number">0</span>; <span class="hljs-comment">// to prevent increasing number of event listeners being added</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">App</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">const</span> history = useHistory();
+    <span class="hljs-keyword">const</span> location = useLocation();
+    <span class="hljs-keyword">const</span> [error, setError] = useState(<span class="hljs-literal">null</span>);
+    <span class="hljs-keyword">const</span> [user, setUser] = useState(<span class="hljs-literal">null</span>);
+    <span class="hljs-keyword">const</span> [participant, setParticipant] = useState(<span class="hljs-literal">null</span>);
+    <span class="hljs-keyword">const</span> [runningContext, setRunningContext] = useState(<span class="hljs-literal">null</span>);
+    <span class="hljs-keyword">const</span> [connected, setConnected] = useState(<span class="hljs-literal">false</span>);
+    <span class="hljs-keyword">const</span> [counter, setCounter] = useState(<span class="hljs-number">0</span>);
+    <span class="hljs-keyword">const</span> [preMeeting, setPreMeeting] = useState(<span class="hljs-literal">true</span>); <span class="hljs-comment">// start with pre-meeting code</span>
+    <span class="hljs-keyword">const</span> [userContextStatus, setUserContextStatus] = useState(<span class="hljs-string">""</span>);
+
+    useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">configureSdk</span>(<span class="hljs-params"></span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>to account for the 2 hour timeout for config</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">            <span class="hljs-keyword">const</span> configTimer = setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+                setCounter(counter + <span class="hljs-number">1</span>);
+            }, <span class="hljs-number">120</span> * <span class="hljs-number">60</span> * <span class="hljs-number">1000</span>);
+
+            <span class="hljs-keyword">try</span> {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Configure the JS SDK, required to call JS APIs in the Zoom App
+These items must be selected in the Features -&gt; Zoom App SDK -&gt; Add APIs tool in Marketplace</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">                <span class="hljs-keyword">const</span> configResponse = <span class="hljs-keyword">await</span> zoomSdk.config({
+                    <span class="hljs-attr">capabilities</span>: [
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>apis demoed in the buttons</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">                        ...apis.map(<span class="hljs-function">(<span class="hljs-params">api</span>) =&gt;</span> api.name), <span class="hljs-comment">// IMPORTANT</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>demo events</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">                        <span class="hljs-string">"onSendAppInvitation"</span>,
+                        <span class="hljs-string">"onShareApp"</span>,
+                        <span class="hljs-string">"onActiveSpeakerChange"</span>,
+                        <span class="hljs-string">"onMeeting"</span>,
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>connect api and event</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">                        <span class="hljs-string">"connect"</span>,
+                        <span class="hljs-string">"onConnect"</span>,
+                        <span class="hljs-string">"postMessage"</span>,
+                        <span class="hljs-string">"onMessage"</span>,
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<p>in-client api and event</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">                        <span class="hljs-string">"authorize"</span>,
+                        <span class="hljs-string">"onAuthorized"</span>,
+                        <span class="hljs-string">"promptAuthorize"</span>,
+                        <span class="hljs-string">"getUserContext"</span>,
+                        <span class="hljs-string">"onMyUserContextChange"</span>,
+                        <span class="hljs-string">"sendAppInvitationToAllParticipants"</span>,
+                        <span class="hljs-string">"sendAppInvitation"</span>,
+                    ],
+                    <span class="hljs-attr">version</span>: <span class="hljs-string">"0.16.0"</span>,
+                });
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"App configured"</span>, configResponse);
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8"></a>
+</div>
+<p>The config method returns the running context of the Zoom App</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">                setRunningContext(configResponse.runningContext);
+                setUserContextStatus(configResponse.auth.status);
+                zoomSdk.onSendAppInvitation(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> {
+                    <span class="hljs-built_in">console</span>.log(data);
+                });
+                zoomSdk.onShareApp(<span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> {
+                    <span class="hljs-built_in">console</span>.log(data);
+                });
+            } <span class="hljs-keyword">catch</span> (error) {
+                <span class="hljs-built_in">console</span>.log(error);
+                setError(<span class="hljs-string">"There was an error configuring the JS SDK"</span>);
+            }
+            <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+                clearTimeout(configTimer);
+            };
+        }
+
+        configureSdk();
+    }, [counter]);
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9"></a>
+</div>
+<p>PRE-MEETING</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">let</span> on_message_handler_client = useCallback(
+        <span class="hljs-function">(<span class="hljs-params">message</span>) =&gt;</span> {
+            <span class="hljs-keyword">let</span> content = message.payload.payload;
+            <span class="hljs-keyword">if</span> (content === <span class="hljs-string">"connected"</span> &amp;&amp; preMeeting === <span class="hljs-literal">true</span>) {
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Meeting instance exists."</span>);
+                zoomSdk.removeEventListener(<span class="hljs-string">"onMessage"</span>, on_message_handler_client);
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Letting meeting instance know client's current state."</span>);
+                sendMessage(<span class="hljs-built_in">window</span>.location.hash, <span class="hljs-string">"client"</span>);
+                setPreMeeting(<span class="hljs-literal">false</span>); <span class="hljs-comment">// client instance is finished with pre-meeting</span>
+            }
+        },
+        [preMeeting]
+    );
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10"></a>
+</div>
+<p>PRE-MEETING</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        <span class="hljs-keyword">if</span> (runningContext === <span class="hljs-string">"inMainClient"</span> &amp;&amp; preMeeting === <span class="hljs-literal">true</span>) {
+            zoomSdk.addEventListener(<span class="hljs-string">"onMessage"</span>, on_message_handler_client);
+        }
+    }, [on_message_handler_client, preMeeting, runningContext]);
+
+    <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sendMessage</span>(<span class="hljs-params">msg, sender</span>) </span>{
+        <span class="hljs-built_in">console</span>.log(
+            <span class="hljs-string">"Message sent from "</span> + sender + <span class="hljs-string">" with data: "</span> + <span class="hljs-built_in">JSON</span>.stringify(msg)
+        );
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Calling postmessage..."</span>, msg);
+        <span class="hljs-keyword">await</span> zoomSdk.postMessage({
+            <span class="hljs-attr">payload</span>: msg,
+        });
+    }
+
+    <span class="hljs-keyword">const</span> receiveMessage = useCallback(
+        <span class="hljs-function">(<span class="hljs-params">receiver, reason = <span class="hljs-string">""</span></span>) =&gt;</span> {
+            <span class="hljs-keyword">let</span> on_message_handler = <span class="hljs-function">(<span class="hljs-params">message</span>) =&gt;</span> {
+                <span class="hljs-keyword">let</span> content = message.payload.payload;
+                <span class="hljs-built_in">console</span>.log(
+                    <span class="hljs-string">"Message received "</span> + receiver + <span class="hljs-string">" "</span> + reason + <span class="hljs-string">": "</span> + content
+                );
+                history.push({<span class="hljs-attr">pathname</span>: content});
+            };
+            <span class="hljs-keyword">if</span> (once === <span class="hljs-number">0</span>) {
+                zoomSdk.addEventListener(<span class="hljs-string">"onMessage"</span>, on_message_handler);
+                once = <span class="hljs-number">1</span>;
+            }
+        },
+        [history]
+    );
+
+    useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">connectInstances</span>(<span class="hljs-params"></span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11"></a>
+</div>
+<p>only can call connect when in-meeting</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">            <span class="hljs-keyword">if</span> (runningContext === <span class="hljs-string">"inMeeting"</span>) {
+                zoomSdk.addEventListener(<span class="hljs-string">"onConnect"</span>, (event) =&gt; {
+                    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Connected"</span>);
+                    setConnected(<span class="hljs-literal">true</span>);
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12"></a>
+</div>
+<p>PRE-MEETING
+first message to send after connecting instances is for the meeting
+instance to catch up with the client instance</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">                    <span class="hljs-keyword">if</span> (preMeeting === <span class="hljs-literal">true</span>) {
+                        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Letting client know meeting instance exists."</span>);
+                        sendMessage(<span class="hljs-string">"connected"</span>, <span class="hljs-string">"meeting"</span>);
+                        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Adding message listener for client's current state."</span>);
+                        <span class="hljs-keyword">let</span> on_message_handler_mtg = <span class="hljs-function">(<span class="hljs-params">message</span>) =&gt;</span> {
+                            <span class="hljs-built_in">console</span>.log(
+                                <span class="hljs-string">"Message from client received. Meeting instance updating its state:"</span>,
+                                message.payload.payload
+                            );
+                            <span class="hljs-built_in">window</span>.location.replace(message.payload.payload);
+                            zoomSdk.removeEventListener(<span class="hljs-string">"onMessage"</span>, on_message_handler_mtg);
+                            setPreMeeting(<span class="hljs-literal">false</span>); <span class="hljs-comment">// meeting instance is finished with pre-meeting</span>
+                        };
+                        zoomSdk.addEventListener(<span class="hljs-string">"onMessage"</span>, on_message_handler_mtg);
+                    }
+                });
+
+                <span class="hljs-keyword">await</span> zoomSdk.connect();
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Connecting..."</span>);
+            }
+        }
+
+        <span class="hljs-keyword">if</span> (connected === <span class="hljs-literal">false</span>) {
+            <span class="hljs-built_in">console</span>.log(runningContext, location.pathname);
+            connectInstances();
+        }
+    }, [connected, location.pathname, preMeeting, runningContext]);
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13"></a>
+</div>
+<p>POST-MEETING</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">communicateTabChange</span>(<span class="hljs-params"></span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14"></a>
+</div>
+<p>only proceed with post-meeting after pre-meeting is done
+just one-way communication from in-meeting to client</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">            <span class="hljs-keyword">if</span> (runningContext === <span class="hljs-string">"inMeeting"</span> &amp;&amp; connected &amp;&amp; preMeeting === <span class="hljs-literal">false</span>) {
+                sendMessage(location.pathname, runningContext);
+            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (runningContext === <span class="hljs-string">"inMainClient"</span> &amp;&amp; preMeeting === <span class="hljs-literal">false</span>) {
+                receiveMessage(runningContext, <span class="hljs-string">"for tab change"</span>);
+            }
+        }
+
+        communicateTabChange();
+    }, [connected, location, preMeeting, receiveMessage, runningContext]);
+
+    <span class="hljs-keyword">if</span> (error) {
+        <span class="hljs-built_in">console</span>.log(error);
+        <span class="hljs-keyword">return</span> (
+            <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"App"</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>{error.message}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+        );
+    }
+
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"App"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>행복메타{user ? ` ${user.first_name} ${user.last_name}` : " 출석 체크 앱"}!<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{`User Context Status: ${userContextStatus}`}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>
+                {runningContext ?
+                    `Running Context: ${runningContext}` :
+                    "Configuring Zoom JavaScript SDK..."
+                }
+            <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+
+</span></pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"></pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

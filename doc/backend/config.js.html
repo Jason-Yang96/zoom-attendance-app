@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>config.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../";
+    var thisFile = "backend\\config.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>config.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>)
+
+<span class="hljs-built_in">require</span>(<span class="hljs-string">'dotenv'</span>).config({
+    <span class="hljs-attr">path</span>: path.join(__dirname, <span class="hljs-string">`.env<span class="hljs-subst">${process.env.NODE_ENV}</span>`</span>),
+})
+
+<span class="hljs-built_in">require</span>(<span class="hljs-string">'dotenv'</span>).config()
+
+<span class="hljs-keyword">const</span> envars = [
+    <span class="hljs-string">'PORT'</span>,
+    <span class="hljs-string">'SESSION_SECRET'</span>,
+    <span class="hljs-string">'ZOOM_APP_CLIENT_URL'</span>,
+    <span class="hljs-string">'ZOOM_APP_CLIENT_ID'</span>,
+    <span class="hljs-string">'ZOOM_APP_CLIENT_SECRET'</span>,
+    <span class="hljs-string">'ZOOM_APP_REDIRECT_URI'</span>,
+    <span class="hljs-string">'ZOOM_HOST'</span>,
+    <span class="hljs-string">'ZOOM_APP_OAUTH_STATE_SECRET'</span>,
+    <span class="hljs-string">'REDIS_URL'</span>,
+    <span class="hljs-string">'REDIS_ENCRYPTION_KEY'</span>,
+]
+
+envars.forEach(<span class="hljs-function">(<span class="hljs-params">envar</span>) =&gt;</span> {
+    <span class="hljs-keyword">if</span> (!process.env[envar]) {
+        <span class="hljs-keyword">const</span> error = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${envar}</span> was not detected in environment`</span>)
+        <span class="hljs-built_in">console</span>.error(error)
+        process.exit(<span class="hljs-number">1</span>)
+    }
+})
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

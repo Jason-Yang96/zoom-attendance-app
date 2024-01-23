@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>server.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../";
+    var thisFile = "backend\\server.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>server.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-meta">'use strict'</span>
+
+<span class="hljs-built_in">require</span>(<span class="hljs-string">'./config'</span>)
+
+<span class="hljs-keyword">const</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>)
+<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>)
+<span class="hljs-keyword">const</span> morgan = <span class="hljs-built_in">require</span>(<span class="hljs-string">'morgan'</span>)
+
+<span class="hljs-keyword">const</span> middleware = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./middleware'</span>)
+
+<span class="hljs-keyword">const</span> zoomAppRouter = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./api/zoomapp/router'</span>)
+<span class="hljs-keyword">const</span> zoomRouter = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./api/zoom/router'</span>)
+<span class="hljs-keyword">const</span> thirdPartyOAuthRouter = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./api/thirdpartyauth(notused)/router'</span>)
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Create app</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-keyword">const</span> app = express() <span class="hljs-comment">//express 서버 자체를 만들고 있음</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Set view engine (for system browser error pages)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">app.set(<span class="hljs-string">'view engine'</span>, <span class="hljs-string">'pug'</span>)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Set static file directory (for system browser error pages)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">app.use(<span class="hljs-string">'/'</span>, express.static(<span class="hljs-string">'public'</span>))
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>Set universal middleware</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">app.use(morgan(<span class="hljs-string">'dev'</span>))
+app.use(express.json())
+app.use(express.urlencoded({ <span class="hljs-attr">extended</span>: <span class="hljs-literal">false</span> }))
+app.use(middleware.session)
+app.use(middleware.setResponseHeaders)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>Zoom App routes</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">app.use(<span class="hljs-string">'/api/zoomapp'</span>, zoomAppRouter)
+<span class="hljs-keyword">if</span> (
+    process.env.AUTH0_CLIENT_ID &amp;&amp;
+    process.env.AUTH0_CLIENT_SECRET &amp;&amp;
+    process.env.AUTH0_ISSUER_BASE_URL
+) {
+    app.use(<span class="hljs-string">'/api/auth0'</span>, thirdPartyOAuthRouter)
+} <span class="hljs-keyword">else</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Please add Auth0 env variables to enable the /auth0 route'</span>)
+}
+
+app.use(<span class="hljs-string">'/zoom'</span>, zoomRouter)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<p>check the ngrok connection
+get 메서드 요청이 들어왔음 =&gt; Hello Zoom Apps 메시지 내보냄</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">app.get(<span class="hljs-string">'/hello'</span>, (req, res) =&gt; {
+    res.send(<span class="hljs-string">'Hello Zoom Apps!'</span>)
+})
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8"></a>
+</div>
+<p>Handle 404: 404 오류를 처리하는 미들웨어를 직접 추가함.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">app.use(<span class="hljs-function">(<span class="hljs-params">req, res, next</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> error = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Not found'</span>)
+    error.status = <span class="hljs-number">404</span>
+    next(error)
+})
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9"></a>
+</div>
+<p>Handle errors (system browser only)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">app.use(<span class="hljs-function">(<span class="hljs-params">error, req, res</span>) =&gt;</span> {
+    res.status(error.status || <span class="hljs-number">500</span>)
+    res.render(<span class="hljs-string">'error'</span>, {
+        <span class="hljs-attr">title</span>: <span class="hljs-string">'Error'</span>,
+        <span class="hljs-attr">message</span>: error.message,
+        <span class="hljs-attr">stack</span>: error.stack,
+    })
+})
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10"></a>
+</div>
+<p>Start express server</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">http.createServer(app).listen(process.env.PORT, () =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Zoom App is listening on port'</span>, process.env.PORT)
+})
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

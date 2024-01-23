@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>apis.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "frontend\\src\\apis.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>apis.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-comment">/* globals zoomSdk */</span>
+
+<span class="hljs-keyword">const</span> invokeZoomAppsSdk = <span class="hljs-function"><span class="hljs-params">api</span> =&gt;</span> <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-keyword">const</span> { name, buttonName = <span class="hljs-string">''</span>, options = <span class="hljs-literal">null</span> } = api
+  <span class="hljs-keyword">const</span> zoomAppsSdkApi = zoomSdk[name].bind(zoomSdk)
+
+  zoomAppsSdkApi(options)
+    .then(<span class="hljs-function"><span class="hljs-params">clientResponse</span> =&gt;</span> {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${buttonName || name}</span> success with response: <span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.stringify(clientResponse)}</span>`</span>);
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">clientError</span> =&gt;</span> {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${buttonName || name}</span> error: <span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.stringify(clientError)}</span>`</span>);
+    });
+}
+
+<span class="hljs-keyword">const</span> sortListByName = <span class="hljs-function">(<span class="hljs-params">curr, next</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> currName = curr.name.toLowerCase();
+  <span class="hljs-keyword">const</span> nextName = next.name.toLowerCase();
+  <span class="hljs-keyword">if</span> (currName &lt; nextName) { <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; }
+  <span class="hljs-keyword">if</span> (currName &gt; nextName) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>New apis are constantly created and may not be included here
+Please visit the Zoom Apps developer docs for comprehensive list</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-keyword">const</span> apis = [
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'setVirtualBackground'</span>,
+    <span class="hljs-attr">options</span>: {
+      <span class="hljs-attr">fileUrl</span>:
+        <span class="hljs-string">"https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=983&amp;q=80"</span>,
+    }
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'removeVirtualBackground'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'getSupportedJsApis'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'openUrl'</span>,
+    <span class="hljs-attr">options</span>: { <span class="hljs-attr">url</span>: <span class="hljs-string">"https://www.google.com/"</span> }
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'getMeetingContext'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'getRunningContext'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'showNotification'</span>,
+    <span class="hljs-attr">options</span>: {
+      <span class="hljs-attr">type</span>: <span class="hljs-string">"info"</span>,
+      <span class="hljs-attr">title</span>: <span class="hljs-string">"Hello Zoom Apps"</span>,
+      <span class="hljs-attr">message</span>: <span class="hljs-string">"Testing notification"</span>,
+    }
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'sendAppInvitationToAllParticipants'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'sendAppInvitationToMeetingOwner'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'showAppInvitationDialog'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'getMeetingParticipants'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'getMeetingUUID'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'getMeetingJoinUrl'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'listCameras'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'expandApp'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'allowParticipantToRecord'</span>
+  },
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'getRecordingContext'</span>
+  },
+  {
+    <span class="hljs-attr">buttonName</span>: <span class="hljs-string">'cloudRecording (start)'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'cloudRecording'</span>,
+    <span class="hljs-attr">options</span>: { <span class="hljs-attr">action</span>: <span class="hljs-string">'start'</span> }
+  },
+  {
+    <span class="hljs-attr">buttonName</span>: <span class="hljs-string">'cloudRecording (stop)'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'cloudRecording'</span>,
+    <span class="hljs-attr">options</span>: { <span class="hljs-attr">action</span>: <span class="hljs-string">'stop'</span> }
+  },
+  {
+    <span class="hljs-attr">buttonName</span>: <span class="hljs-string">'cloudRecording (pause)'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'cloudRecording'</span>,
+    <span class="hljs-attr">options</span>: { <span class="hljs-attr">action</span>: <span class="hljs-string">'pause'</span> }
+  },
+  {
+    <span class="hljs-attr">buttonName</span>: <span class="hljs-string">'cloudRecording (resume)'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'cloudRecording'</span>,
+    <span class="hljs-attr">options</span>: { <span class="hljs-attr">action</span>: <span class="hljs-string">'resume'</span> }
+  },
+  {
+    <span class="hljs-attr">buttonName</span>: <span class="hljs-string">'setVideoMirrorEffect (true)'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'setVideoMirrorEffect'</span>,
+    <span class="hljs-attr">options</span>: {
+      <span class="hljs-attr">mirrorMyVideo</span>: <span class="hljs-literal">true</span>
+    }
+  },
+  {
+    <span class="hljs-attr">buttonName</span>: <span class="hljs-string">'setVideoMirrorEffect (false)'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'setVideoMirrorEffect'</span>,
+    <span class="hljs-attr">options</span>: {
+      <span class="hljs-attr">mirrorMyVideo</span>: <span class="hljs-literal">false</span>
+    }
+  },
+  {
+    <span class="hljs-attr">buttonName</span>: <span class="hljs-string">'shareApp (start)'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'shareApp'</span>,
+    <span class="hljs-attr">options</span>: {
+      <span class="hljs-attr">action</span>: <span class="hljs-string">'start'</span>
+    }
+  },
+  {
+    <span class="hljs-attr">buttonName</span>: <span class="hljs-string">'shareApp (stop)'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'shareApp'</span>,
+    <span class="hljs-attr">options</span>: {
+      <span class="hljs-attr">action</span>: <span class="hljs-string">'stop'</span>
+    }
+  },
+].sort(sortListByName);
+
+<span class="hljs-built_in">module</span>.exports = { apis, invokeZoomAppsSdk }
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>
