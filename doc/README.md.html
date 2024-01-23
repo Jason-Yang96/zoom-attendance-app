@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>README.md</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "";
+    var thisFile = "README.md";
+    var defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+      <div class="heading h1">
+        <a href="#advanced-zoom-apps-sample">Advanced Zoom Apps Sample</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#usage">Usage</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#setup.env-files">Setup .env files</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#start-your-ngrok-reverse-proxy">Start your Ngrok (reverse proxy)</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#setup-in-zoom-marketplace-app-build-flow">Setup in Zoom Marketplace app build flow</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#app-credentials">App Credentials</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#information">Information</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#features">Features</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#scopes">Scopes</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#start-developing">Start developing</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#start-containers">Start containers</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#install-the-app">Install the app</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#validate-its-working">Validate It&#39;s Working</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#develop">Develop</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#ui">UI</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#server">Server</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#logs-and-enabling-developer-tools">Logs and Enabling Developer Tools</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#app-components">App Components</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#frontend">Frontend</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#backend">Backend</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#database">Database</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#third-party-authentication-example-optional-and-using-auth0">Third party authentication example - optional and using Auth0</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#what-do-i-do-next">What do I do next?</a>
+      </div>
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="docs markdown"><div class="pilwrap" id="advanced-zoom-apps-sample">
+  <h1>
+    <a href="#advanced-zoom-apps-sample" name="advanced-zoom-apps-sample" class="pilcrow"></a>
+Advanced Zoom Apps Sample
+  </h1>
+</div>
+<p>Advanced Sample covers most complex scenarios that might be needed in apps.</p>
+<p>App has reference implementation for:</p>
+<ul>
+<li>Authentication flows: marketplace authentication, in-client authentication, third-party auth providers</li>
+<li>REST API calls and retrieving user information</li>
+<li>Zoom Apps SDK methods and events, including role-based permissions</li>
+<li>Guest mode</li>
+</ul>
+<p>Tech stack: react js, node.js, express, docker (optional)</p>
+<div class="pilwrap" id="usage">
+  <h2>
+    <a href="#usage" name="usage" class="pilcrow"></a>
+Usage
+  </h2>
+</div>
+<p>Requirements:</p>
+<ul>
+<li>Docker</li>
+<li>Ngrok or another reverse proxy</li>
+</ul>
+<div class="pilwrap" id="setup.env-files">
+  <h3>
+    <a href="#setup.env-files" name="setup.env-files" class="pilcrow"></a>
+Setup .env files
+  </h3>
+</div>
+<p>Please see the <code>.env.example</code> file in the repository.</p>
+<ul>
+<li>Create a <code>.env</code> file by copying the example and filling in the values
+<ul>
+<li>If you are in development, use the Client ID and Client secret under <code>Development</code></li>
+<li>Lines starting with a '$' are terminal commands; you'll need the openssl program.  Run the command in your terminal and capture the output, or you can use what those values are currently set at for now.</li>
+<li>Note that the three 'AUTH0' - prefixed fields are optional - see instructions for the Third Party OAuth below.  Leaving out any of these three values will disable this demonstration feature.</li>
+</ul>
+</li>
+</ul>
+<div class="pilwrap" id="start-your-ngrok-reverse-proxy">
+  <h3>
+    <a href="#start-your-ngrok-reverse-proxy" name="start-your-ngrok-reverse-proxy" class="pilcrow"></a>
+Start your Ngrok (reverse proxy)
+  </h3>
+</div>
+<p>Zoom Apps do not support localhost, and must be served over https.  To develop locally, you need to tunnel traffic to this application via https, because the application runs in Docker containers serving traffic from <code>http://localhost</code>. You can use Ngrok to do this. Once installed you may run this command from your terminal:</p>
+<pre><code class="bash">ngrok http 3000
+</code></pre>
+<p>Ngrok will output the origin it has created for your tunnel, eg <code>https://9a20-38-99-100-7.ngrok.io</code>. You'll need to use this across your Zoom App configuration in the Zoom Marketplace (web) build flow (see below).</p>
+<p>Please copy the https origin from the Ngrok terminal output and paste it in the <code>PUBLIC_URL</code> value in the <code>.env</code> file.
+<img src="screenshots/ngrok-https-origin.png" alt="ngrok https origin"></p>
+<p>Please note that this ngrok URL will change once you restart ngrok (unless you purchased your own ngrok pro account).  If you shut down your Ngrok (there's no harm to leaving it on), upon restart you'll need to copy and paste the new origin into the <code>.env</code> file AND also to your Marketplace build flow.</p>
+<div class="pilwrap" id="setup-in-zoom-marketplace-app-build-flow">
+  <h3>
+    <a href="#setup-in-zoom-marketplace-app-build-flow" name="setup-in-zoom-marketplace-app-build-flow" class="pilcrow"></a>
+Setup in Zoom Marketplace app build flow
+  </h3>
+</div>
+<p>The Zoom Marketplace build flow for a Zoom App may be found <a href="https://marketplace.zoom.us/develop/create">here</a>.  You will need a developer account with Zoom Apps enabled.</p>
+<p>The following are steps to take in each of the tabs in the build flow . . .</p>
+<div class="pilwrap" id="app-credentials">
+  <h4>
+    <a href="#app-credentials" name="app-credentials" class="pilcrow"></a>
+App Credentials
+  </h4>
+</div>
+<p>If you enabled the &quot;List app on Marketplace to be added by any Zoom user&quot; toggle while creating your app on the Marketplace, you will see the following two sections: Development and Production.
+Note: The above option should only be selected if you intend to publish the app to the marketplace. This option can be enabled later as well under the &quot;Activation&quot; tab. The &quot;Activation&quot; tab only appears if you have not selected to list the app to be published</p>
+<p><code>your Ngrok origin</code> = ie. <code>https://9a20-38-99-100-7.ngrok.io</code>
+Follow these instructions for the &quot;Development&quot; section</p>
+<ul>
+<li>Add <code>&lt;your Ngrok origin&gt;/api/zoomapp/home</code> in the Home URL field</li>
+<li>Copy and paste your Client ID and Client secret (from the &quot;Development&quot; section, not &quot;Production&quot; section) into the <code>.env</code> file for this application</li>
+<li>Add <code>&lt;your Ngrok origin&gt;/api/zoomapp/auth</code> in the Redirect URL for OAuth field</li>
+<li>Add <code>&lt;your Ngrok origin&gt;/api/zoomapp/auth</code> in the OAuth allow list</li>
+<li>Add <code>&lt;your Ngrok origin&gt;/api/zoomapp/proxy#/userinfo</code> in the OAuth allow list
+<ul>
+<li>Not needed if you are not using in-client oauth.  This is the exact window location where authorize method is invoked</li>
+</ul>
+</li>
+<li>Add your Ngrok domain only (no protocol, eg <code>9a20-38-99-100-7.ngrok.io</code>) in the Domain allow list</li>
+<li>Add the SDK url <code>appssdk.zoom.us</code> in the Domain allow list</li>
+<li>Add <code>images.unsplash.com</code> to the Domain allow list</li>
+<li>Add any other required domains (eg <code>my-cdn.example.com</code>) in the Domain allow list*</li>
+</ul>
+<p>*Important: All requests to domains <strong>NOT</strong> in the Domain allow list in the app's Marketplace build flow will be blocked in the Zoom Apps embedded browser</p>
+<div class="pilwrap" id="information">
+  <h4>
+    <a href="#information" name="information" class="pilcrow"></a>
+Information
+  </h4>
+</div>
+<ul>
+<li>Please fill out the developer contact name and developer contact email fields to test the application locally. In order to submit the application for review, you will need to fill out the rest of the fields.</li>
+</ul>
+<div class="pilwrap" id="features">
+  <h4>
+    <a href="#features" name="features" class="pilcrow"></a>
+Features
+  </h4>
+</div>
+<ul>
+<li>Under <code>Zoom App SDK</code> click <strong>Add APIs</strong>
+<ul>
+<li>For the purposes of this app, please add the following APIs and events:
+<ul>
+<li><code>allowParticipantToRecord</code></li>
+<li><code>authorize</code></li>
+<li><code>cloudRecording</code></li>
+<li><code>connect</code></li>
+<li><code>expandApp</code></li>
+<li><code>getMeetingContext</code></li>
+<li><code>getMeetingJoinUrl</code></li>
+<li><code>getMeetingParticipants</code></li>
+<li><code>getMeetingUUID</code></li>
+<li><code>getRecordingContext</code></li>
+<li><code>getRunningContext</code></li>
+<li><code>getSupportedjsApis</code></li>
+<li><code>getUserContext</code></li>
+<li><code>listCameras</code></li>
+<li><code>onActiveSpeakerChange</code></li>
+<li><code>onAuthorized</code></li>
+<li><code>onConnect</code></li>
+<li><code>onMeeting</code></li>
+<li><code>onMessage</code></li>
+<li><code>onMyUserContextChange</code></li>
+<li><code>onSendAppInvitation</code></li>
+<li><code>onShareApp</code></li>
+<li><code>openUrl</code></li>
+<li><code>postMessage</code></li>
+<li><code>promptAuthorize</code></li>
+<li><code>removeVirtualBackground</code></li>
+<li><code>sendAppInvitation</code></li>
+<li><code>shareApp</code></li>
+<li><code>showAppInvitationDialog</code></li>
+<li><code>sendAppInvitationToMeetingOwner</code></li>
+<li><code>sendAppInvitationToAllParticipants</code></li>
+<li><code>setVideoMirrorEffect</code></li>
+<li><code>setVirtualBackground</code></li>
+<li><code>showNotification</code></li>
+</ul>
+</li>
+<li>Users will be asked to consent to these scopes during the add flow before being allowed to use the Zoom App</li>
+<li>Important: The added or checked items must at least include those in the &quot;capabilities&quot; list in the call to zoomSdk.config in the embedded browser, eg frontend/src/App.js</li>
+</ul>
+</li>
+<li>Select any additional features you would like to enable, eg Guest mode, In-client OAuth, Collaborate mode, etc. For this app, have Guest mode, In-client OAuth, and Collaborate Mode turned on.
+<ul>
+<li>Important: For legacy reasons, Guest mode is NOT enabled by default. Please make sure your app supports this - particularly relevant for applications live prior to June 2022. Newer applications will want to take advantage of these features from the start</li>
+</ul>
+</li>
+</ul>
+<div class="pilwrap" id="scopes">
+  <h4>
+    <a href="#scopes" name="scopes" class="pilcrow"></a>
+Scopes
+  </h4>
+</div>
+<ul>
+<li>Add the following Scopes required for this Advanced Sample Zoom App: <code>zoomapp:inmeeting</code>, <code>user:read</code>
+<ul>
+<li>The Scopes referred to here are for the Zoom API - they are not exclusive to Zoom Apps. Please find documentation for the Zoom API <a href="https://marketplace.zoom.us/docs/api-reference/introduction">here</a></li>
+<li>As with the Zoom App SDK APIs and events from the 'Features' tab, scopes selected here will be presented to users for consent before they may use the Zoom App.</li>
+</ul>
+</li>
+</ul>
+<div class="pilwrap" id="start-developing">
+  <h2>
+    <a href="#start-developing" name="start-developing" class="pilcrow"></a>
+Start developing
+  </h2>
+</div>
+<div class="pilwrap" id="start-containers">
+  <h3>
+    <a href="#start-containers" name="start-containers" class="pilcrow"></a>
+Start containers
+  </h3>
+</div>
+<ul>
+<li>Use the <code>docker-compose</code> tool from the root directory to start both the backend and frontend containers:</li>
+</ul>
+<pre><code>docker-compose up
+</code></pre>
+<ul>
+<li>Now, you should be getting logs from both the express server/backend and the webpack-dev-server that serves the frontend.</li>
+</ul>
+<div class="pilwrap" id="install-the-app">
+  <h3>
+    <a href="#install-the-app" name="install-the-app" class="pilcrow"></a>
+Install the app
+  </h3>
+</div>
+<p>Before proceeding, make sure to:</p>
+<ul>
+<li>Log in to zoom.us on the web (if not already signed in there)</li>
+<li>Make sure the user matches the user you've used to log in to the Zoom client</li>
+<li>While developing, make sure the user is in the developer account</li>
+</ul>
+<p>To install your app and open it the Zoom client's embedded browser, visit:</p>
+<pre><code>&lt;your Ngrok origin&gt;/api/zoomapp/install
+</code></pre>
+<p>Any errors you encounter during the add flow are likely related to user mismatches or different/non-developer accounts.  You may also want to double check that your Client ID and Client secret (in the <code>.env</code> file) are up to date.</p>
+<div class="pilwrap" id="validate-its-working">
+  <h3>
+    <a href="#validate-its-working" name="validate-its-working" class="pilcrow"></a>
+Validate It's Working
+  </h3>
+</div>
+<p>After hitting the install URL, an authorization page will show up in the browser. After reviewing and accepting the permissions, the browser will prompt a redirect (AKA deeplink) to the Zoom Client. The client should open up and you should see the Reference App running in your client</p>
+<div class="pilwrap" id="develop">
+  <h3>
+    <a href="#develop" name="develop" class="pilcrow"></a>
+Develop
+  </h3>
+</div>
+<div class="pilwrap" id="ui">
+  <h4>
+    <a href="#ui" name="ui" class="pilcrow"></a>
+UI
+  </h4>
+</div>
+<p>The React-based UI will hot reload automatically with changes, thanks to the Webpack dev server.  Visit each of the Zoom APIs demoed and test their functionality.</p>
+<div class="pilwrap" id="server">
+  <h4>
+    <a href="#server" name="server" class="pilcrow"></a>
+Server
+  </h4>
+</div>
+<p>The backend will update live with any changes as well, thanks to the nodemon npm package.</p>
+<p>The server will persist sessions for each device (eg system browser or embedded browser/Zoom client) that visits. A common mistake is to restart the Docker containers expecting user data to persist.  This will cause problems.  You should plan to revisit the install flow every time you restart your Docker containers.</p>
+<div class="pilwrap" id="logs-and-enabling-developer-tools">
+  <h4>
+    <a href="#logs-and-enabling-developer-tools" name="logs-and-enabling-developer-tools" class="pilcrow"></a>
+Logs and Enabling Developer Tools
+  </h4>
+</div>
+<p>Look for helpful logs from the frontend by opening the browser developer tools console in the Zoom Apps embedded browser (you must enable it first - see following instructions), and from the backend in your terminal window.</p>
+<p>To enable the developer tools in the Zoom client:</p>
+<ul>
+<li>For MacOS, run this command in your terminal:</li>
+</ul>
+<pre><code>defaults write ZoomChat webview.context.menu true
+</code></pre>
+<ul>
+<li>For Windows machines:
+<ul>
+<li>Find your local Zoom data folder, eg <code>C:\Users\&lt;username&gt;\AppData\Roaming\Zoom\data</code></li>
+<li>Find the &quot;zoom.us.ini&quot; file or create one if it does not exist</li>
+<li>Paste in this line and save:</li>
+</ul>
+</li>
+</ul>
+<pre><code>[ZoomChat]
+webview.context.menu=true
+</code></pre>
+<p>After following the above instructions, <strong>Right Click</strong> -&gt; <strong>Inspect Element</strong> in the embedded browser (Zoom Apps panel in the Zoom client) to see the developer tools.</p>
+<div class="pilwrap" id="app-components">
+  <h3>
+    <a href="#app-components" name="app-components" class="pilcrow"></a>
+App Components
+  </h3>
+</div>
+<div class="pilwrap" id="frontend">
+  <h4>
+    <a href="#frontend" name="frontend" class="pilcrow"></a>
+Frontend
+  </h4>
+</div>
+<p>This Zoom App uses <a href="https://create-react-app.dev/">create-react-app</a> for the frontend component. The express server/backend provides a proxy for this, so that it also can sit behind the Ngrok origin that you create.</p>
+<p>The frontend app is quite simple:</p>
+<ul>
+<li>It calls a Zoom REST API endpoint for user data via a backend-hosted proxy that adds user access token to the request</li>
+<li>It imports the Zoom SDK in <code>index.html</code> via a script <code>&lt;script src=&quot;https://appssdk.zoom.us/sdk.min.js&quot;&gt;&lt;/script&gt;</code></li>
+<li>Offers an example Zoom App SDK configuration to get the running context of the Zoom App.</li>
+<li>Includes examples of Zoom App SDK method invocations</li>
+</ul>
+<div class="pilwrap" id="backend">
+  <h4>
+    <a href="#backend" name="backend" class="pilcrow"></a>
+Backend
+  </h4>
+</div>
+<p>The backend is a NodeJS/Express server. The routes include:</p>
+<ul>
+<li>A home route to initialize a cookie-based session for embedded browser users</li>
+<li>A proxy for the Zoom App frontend - serves frontend files from the frontend container</li>
+<li>A proxy for the Zoom REST API - adds user access token and calls Zoom API from the server</li>
+<li>Routes for the traditional/web-based add flow: install and authenticate</li>
+<li>Routes for In-client OAuth add flow: authorize and on authorize</li>
+<li>Routes for the 3rd Party OAuth flow (optional; example using an example Auth0 application)</li>
+</ul>
+<div class="pilwrap" id="database">
+  <h4>
+    <a href="#database" name="database" class="pilcrow"></a>
+Database
+  </h4>
+</div>
+<p>Redis:</p>
+<ul>
+<li>Stores session data (cookie-based sessions using the express-session npm library)</li>
+<li>Stores application data (users, access tokens for Zoom API and 3rd Party OAuth provider)</li>
+</ul>
+<div class="pilwrap" id="third-party-authentication-example-optional-and-using-auth0">
+  <h2>
+    <a href="#third-party-authentication-example-optional-and-using-auth0" name="third-party-authentication-example-optional-and-using-auth0" class="pilcrow"></a>
+Third party authentication example - optional and using Auth0
+  </h2>
+</div>
+<p>The third party authentication example is optional - if you skip these steps, please leave the 'Auth0' - prefixed fields in the <code>.env</code> file empty or remove them entirely.  Leaving out any of those three values from the <code>.env</code> file will disable this demonstration feature.</p>
+<ul>
+<li>
+<p>Auth0 steps for set up:</p>
+<ol>
+<li>Sign up for an account <a href="https://auth0.com/signup?place=header&amp;type=button&amp;text=sign%20up">here</a></li>
+<li>Create an application</li>
+<li>Select <code>Regular Web Applications</code></li>
+<li>Select <code>Auth0 Management API</code> (Doesn't really matter here)</li>
+<li>Permissions: Select <code>All</code></li>
+<li>In the section <code>Application Properties</code>, make sure (or change) <code>Token Endpoint Authentication Method</code> to <code>Post</code></li>
+<li>In the section <code>Application URIs</code>, fill in <code>Allowed Callback URLs</code> with <code>https://&lt;your Ngrok origin&gt;/api/auth0/auth</code> and <code>Allowed Web Origins</code> with <code>https://&lt;your Ngrok origin&gt;</code></li>
+<li>Under <code>Advanced Settings</code> -&gt; <code>Grant Types</code>, check <code>Authorization Code</code></li>
+<li>Save Changes</li>
+<li>Under <code>User Management</code> in the left-hand panel, select <code>Users</code> and create a user with username and password.</li>
+<li>During the auth flow, use the credentials created in <code>Step 9</code> to login.</li>
+</ol>
+</li>
+</ul>
+<div class="pilwrap" id="what-do-i-do-next">
+  <h2>
+    <a href="#what-do-i-do-next" name="what-do-i-do-next" class="pilcrow"></a>
+What do I do next?
+  </h2>
+</div>
+<p>Start building your app! You can check out the <a href="https://developers.zoom.us/docs/zoom-apps/">Zoom Apps developer docs</a> for more information on the JS SDK. You can also explore the <a href="https://developers.zoom.us/docs/api/">Zoom REST API</a> or use the third party OAuth to call a different API.</p>
+</div>
+  </div>
+</body>
+</html>

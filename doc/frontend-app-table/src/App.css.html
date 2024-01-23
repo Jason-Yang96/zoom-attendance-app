@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>App.css</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "frontend-app-table\\src\\App.css";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>App.css</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="css"><span class="hljs-keyword">@import</span> url(<span class="hljs-string">"https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css"</span>);
+* {
+  <span class="hljs-attribute">font-family</span>: <span class="hljs-string">"Wanted Sans Variable"</span>, <span class="hljs-string">"Wanted Sans"</span>, -apple-system,
+    BlinkMacSystemFont, system-ui, <span class="hljs-string">"Segoe UI"</span>, <span class="hljs-string">"Apple SD Gothic Neo"</span>,
+    <span class="hljs-string">"Noto Sans KR"</span>, <span class="hljs-string">"Malgun Gothic"</span>, <span class="hljs-string">"Apple Color Emoji"</span>, <span class="hljs-string">"Segoe UI Emoji"</span>,
+    <span class="hljs-string">"Segoe UI Symbol"</span>, sans-serif;
+}
+
+<span class="hljs-selector-class">.container</span> {
+  <span class="hljs-attribute">display</span>: flex;
+  <span class="hljs-attribute">flex-direction</span>: column;
+  <span class="hljs-attribute">align-items</span>: center;
+  <span class="hljs-attribute">justify-content</span>: center;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">100vh</span>;
+}
+
+<span class="hljs-selector-class">.search-container</span> <span class="hljs-selector-tag">form</span> {
+  <span class="hljs-attribute">display</span>: flex;
+  <span class="hljs-attribute">align-items</span>: center;
+  <span class="hljs-attribute">justify-content</span>: center;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">500px</span>;
+}
+
+<span class="hljs-selector-class">.search-container</span> <span class="hljs-selector-tag">input</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">400px</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">40px</span>;
+  <span class="hljs-attribute">border-left-width</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">border-right-width</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">border-top-width</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">border-bottom-width</span>: <span class="hljs-number">1px</span> solid <span class="hljs-built_in">rgb</span>(<span class="hljs-number">209</span>, <span class="hljs-number">209</span>, <span class="hljs-number">209</span>);
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">0</span> <span class="hljs-number">10px</span>;
+  <span class="hljs-attribute">margin-right</span>: <span class="hljs-number">10px</span>;
+}
+
+<span class="hljs-selector-class">.table</span> {
+  <span class="hljs-attribute">margin-top</span>: <span class="hljs-number">20px</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">80%</span>;
+  <span class="hljs-attribute">border-collapse</span>: collapse;
+  <span class="hljs-attribute">text-align</span>: center;
+}
+
+<span class="hljs-selector-class">.th</span>,
+<span class="hljs-selector-class">.td</span> {
+  <span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> solid <span class="hljs-built_in">rgb</span>(<span class="hljs-number">197</span>, <span class="hljs-number">197</span>, <span class="hljs-number">197</span>);
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">8px</span>;
+  <span class="hljs-attribute">text-align</span>: left;
+  <span class="hljs-attribute">text-align</span>: center;
+}
+
+<span class="hljs-selector-class">.cell-check-list</span> {
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">20%</span>;
+  <span class="hljs-attribute">color</span>: <span class="hljs-built_in">rgb</span>(<span class="hljs-number">57</span>, <span class="hljs-number">57</span>, <span class="hljs-number">57</span>);
+  <span class="hljs-attribute">align-items</span>: center;
+}
+
+<span class="hljs-selector-class">.th</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#f2f2f2</span>;
+}
+
+<span class="hljs-selector-class">.tr</span><span class="hljs-selector-pseudo">:nth-child(even)</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#f9f9f9</span>;
+}
+
+<span class="hljs-selector-class">.tr</span><span class="hljs-selector-pseudo">:hover</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#ddd</span>;
+}
+
+<span class="hljs-comment">/* CSS */</span>
+<span class="hljs-selector-class">.button-22</span> {
+  <span class="hljs-attribute">align-items</span>: center;
+  <span class="hljs-attribute">appearance</span>: button;
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#0276ff</span>;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">8px</span>;
+  <span class="hljs-attribute">border-style</span>: none;
+  <span class="hljs-attribute">box-shadow</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0.26</span>) <span class="hljs-number">0</span> <span class="hljs-number">1px</span> <span class="hljs-number">2px</span> inset;
+  <span class="hljs-attribute">box-sizing</span>: border-box;
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#fff</span>;
+  <span class="hljs-attribute">cursor</span>: pointer;
+  <span class="hljs-attribute">display</span>: flex;
+  <span class="hljs-attribute">flex-direction</span>: row;
+  <span class="hljs-attribute">flex-shrink</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">100%</span>;
+  <span class="hljs-attribute">line-height</span>: <span class="hljs-number">1.15</span>;
+  <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">10px</span> <span class="hljs-number">21px</span>;
+  <span class="hljs-attribute">text-align</span>: center;
+  <span class="hljs-attribute">text-transform</span>: none;
+  <span class="hljs-attribute">transition</span>: color <span class="hljs-number">0.13s</span> ease-in-out, background <span class="hljs-number">0.13s</span> ease-in-out,
+    opacity <span class="hljs-number">0.13s</span> ease-in-out, box-shadow <span class="hljs-number">0.13s</span> ease-in-out;
+  <span class="hljs-attribute">user-select</span>: none;
+  <span class="hljs-attribute">-webkit-user-select</span>: none;
+  <span class="hljs-attribute">touch-action</span>: manipulation;
+}
+
+<span class="hljs-selector-class">.button-22</span><span class="hljs-selector-pseudo">:active</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#006ae8</span>;
+}
+
+<span class="hljs-selector-class">.button-22</span><span class="hljs-selector-pseudo">:hover</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#1c84ff</span>;
+}
+
+<span class="hljs-selector-class">.take_data_button</span> {
+  <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">20px</span>;
+}
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

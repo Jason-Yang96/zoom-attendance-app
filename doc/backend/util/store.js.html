@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>store.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../../doc-style.css" />
+  <script src="../../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../../";
+    var thisFile = "backend\\util\\store.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>store.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-keyword">const</span> redis = <span class="hljs-built_in">require</span>(<span class="hljs-string">'redis'</span>)
+<span class="hljs-keyword">const</span> encrypt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./encrypt'</span>)
+<span class="hljs-keyword">const</span> util = <span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>)
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>The auth token exchange happens before the Zoom App is launched. Therefore,
+we need a place to store the tokens so we can later use them when a session
+is established.</p>
+<p>We're using Redis here, but this could be replaced by a cache or other means
+of persistence.</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+<span class="hljs-keyword">const</span> db = redis.createClient({
+  <span class="hljs-attr">url</span>: process.env.REDIS_URL,
+})
+
+<span class="hljs-keyword">const</span> getAsync = util.promisify(db.get).bind(db)
+<span class="hljs-keyword">const</span> setAsync = util.promisify(db.set).bind(db)
+<span class="hljs-keyword">const</span> delAsync = util.promisify(db.del).bind(db)
+
+db.on(<span class="hljs-string">'error'</span>, <span class="hljs-built_in">console</span>.error)
+
+<span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-attr">getUser</span>: <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">zoomUserId</span>) </span>{
+    <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> getAsync(zoomUserId)
+    <span class="hljs-keyword">if</span> (!user) {
+      <span class="hljs-built_in">console</span>.log(
+        <span class="hljs-string">'User not found.  This is normal if the user has added via In-Client (or if you have restarted Docker without closing and reloading the app)'</span>
+      )
+      <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-string">'User not found'</span>)
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(encrypt.beforeDeserialization(user))
+  },
+
+  <span class="hljs-attr">upsertUser</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">zoomUserId, accessToken, refreshToken, expired_at</span>) </span>{
+    <span class="hljs-keyword">const</span> isValidUser = <span class="hljs-built_in">Boolean</span>(
+      <span class="hljs-keyword">typeof</span> zoomUserId === <span class="hljs-string">'string'</span> &amp;&amp;
+        <span class="hljs-keyword">typeof</span> accessToken === <span class="hljs-string">'string'</span> &amp;&amp;
+        <span class="hljs-keyword">typeof</span> refreshToken === <span class="hljs-string">'string'</span> &amp;&amp;
+        <span class="hljs-keyword">typeof</span> expired_at === <span class="hljs-string">'number'</span>
+    )
+
+    <span class="hljs-keyword">if</span> (!isValidUser) {
+      <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-string">'Invalid user input'</span>)
+    }
+
+    <span class="hljs-keyword">return</span> setAsync(
+      zoomUserId,
+      encrypt.afterSerialization(
+        <span class="hljs-built_in">JSON</span>.stringify({ accessToken, refreshToken, expired_at })
+      )
+    )
+  },
+
+  <span class="hljs-attr">updateUser</span>: <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">zoomUserId, data</span>) </span>{
+    <span class="hljs-keyword">const</span> userData = <span class="hljs-keyword">await</span> getAsync(zoomUserId)
+    <span class="hljs-keyword">const</span> existingUser = <span class="hljs-built_in">JSON</span>.parse(encrypt.beforeDeserialization(userData))
+    <span class="hljs-keyword">const</span> updatedUser = { ...existingUser, ...data }
+
+    <span class="hljs-keyword">return</span> setAsync(
+      zoomUserId,
+      encrypt.afterSerialization(<span class="hljs-built_in">JSON</span>.stringify(updatedUser))
+    )
+  },
+
+  <span class="hljs-attr">logoutUser</span>: <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">zoomUserId</span>) </span>{
+    <span class="hljs-keyword">const</span> reply = <span class="hljs-keyword">await</span> getAsync(zoomUserId)
+    <span class="hljs-keyword">const</span> decrypted = <span class="hljs-built_in">JSON</span>.parse(encrypt.beforeDeserialization(reply))
+    <span class="hljs-keyword">delete</span> decrypted.thirdPartyAccessToken
+    <span class="hljs-keyword">return</span> setAsync(
+      zoomUserId,
+      encrypt.afterSerialization(<span class="hljs-built_in">JSON</span>.stringify(decrypted))
+    )
+  },
+
+  <span class="hljs-attr">deleteUser</span>: <span class="hljs-function">(<span class="hljs-params">zoomUserId</span>) =&gt;</span> delAsync(zoomUserId),
+
+  <span class="hljs-attr">storeInvite</span>: <span class="hljs-function">(<span class="hljs-params">invitationID, tabState</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> dbKey = <span class="hljs-string">`invite:<span class="hljs-subst">${invitationID}</span>`</span>
+    <span class="hljs-keyword">return</span> setAsync(dbKey, tabState)
+  },
+
+  <span class="hljs-attr">getInvite</span>: <span class="hljs-function">(<span class="hljs-params">invitationID</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> dbKey = <span class="hljs-string">`invite:<span class="hljs-subst">${invitationID}</span>`</span>
+    <span class="hljs-keyword">return</span> getAsync(dbKey)
+  },
+}
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

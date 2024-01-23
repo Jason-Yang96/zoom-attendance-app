@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>middleware.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../";
+    var thisFile = "backend\\middleware.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>middleware.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-keyword">const</span> session = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express-session'</span>)
+<span class="hljs-keyword">const</span> SessionStore = <span class="hljs-built_in">require</span>(<span class="hljs-string">'connect-redis'</span>)(session)
+<span class="hljs-keyword">const</span> redis = <span class="hljs-built_in">require</span>(<span class="hljs-string">'redis'</span>)
+<span class="hljs-keyword">const</span> store = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./util/store'</span>)
+
+<span class="hljs-built_in">module</span>.exports = {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Set up required OWASP HTTP response headers</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    setResponseHeaders(req, res, next) {
+        res.setHeader(<span class="hljs-string">'Strict-Transport-Security'</span>, <span class="hljs-string">'max-age=31536000'</span>)
+        res.setHeader(<span class="hljs-string">'X-Content-Type-Options'</span>, <span class="hljs-string">'nosniff'</span>)
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>This CSP is an example, it might not work for your webpage(s)
+You can generate correct CSP for your webpage here https://www.cspisawesome.com/</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        <span class="hljs-keyword">const</span> publicUrl = process.env.PUBLIC_URL
+        <span class="hljs-keyword">const</span> { host } = <span class="hljs-keyword">new</span> URL(publicUrl)
+        res.setHeader(
+            <span class="hljs-string">'Content-Security-Policy'</span>,
+            <span class="hljs-string">`default-src *; style-src 'self' 'unsafe-inline'; script-src * 'self' https://appssdk.zoom.us 'unsafe-inline'; connect-src * 'self' wss://<span class="hljs-subst">${host}</span>/sockjs-node; img-src 'self' data: https://images.unsplash.com; base-uri 'self'; form-action 'self';`</span>
+        )
+        res.setHeader(<span class="hljs-string">'Referrer-Policy'</span>, <span class="hljs-string">'same-origin'</span>)
+        res.setHeader(<span class="hljs-string">'X-Frame-Option'</span>, <span class="hljs-string">'same-origin'</span>)
+        next()
+    },
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Zoom app session middleware</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    session: session({
+        <span class="hljs-attr">secret</span>: process.env.SESSION_SECRET,
+        <span class="hljs-attr">resave</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">saveUninitialized</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">cookie</span>: {
+            <span class="hljs-attr">path</span>: <span class="hljs-string">'/'</span>,
+            <span class="hljs-attr">httpOnly</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">maxAge</span>: <span class="hljs-number">365</span> * <span class="hljs-number">24</span> * <span class="hljs-number">60</span> * <span class="hljs-number">60</span> * <span class="hljs-number">1000</span>,
+        },
+        <span class="hljs-attr">store</span>: <span class="hljs-keyword">new</span> SessionStore({
+            <span class="hljs-attr">client</span>: redis.createClient({
+                <span class="hljs-attr">url</span>: process.env.REDIS_URL,
+            }),
+        }),
+    }),
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>Protected route middleware
+Routes behind this will only show if the user has a Zoom App session and an Auth0 id token</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">async</span> requiresThirdPartyAuth(req, res, next) {
+        <span class="hljs-keyword">if</span> (req.session.user) {
+            <span class="hljs-keyword">try</span> {
+                <span class="hljs-keyword">const</span> user = <span class="hljs-keyword">await</span> store.getUser(req.session.user)
+                req.thirdPartyAccessToken = user.thirdPartyAccessToken
+                <span class="hljs-keyword">return</span> next()
+            } <span class="hljs-keyword">catch</span> (error) {
+                <span class="hljs-keyword">return</span> next(
+                    <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(
+                        <span class="hljs-string">'Error getting app user from session.  The user may have added from In-Client OAuth'</span>
+                    )
+                )
+            }
+        } <span class="hljs-keyword">else</span> {
+            next(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Unkown or missing session'</span>))
+        }
+    },
+}
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>
