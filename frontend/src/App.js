@@ -1,32 +1,33 @@
 /* globals zoomSdk */
-import {useLocation, useHistory} from "react-router-dom";
-import {useCallback, useEffect, useState} from "react";
-import {apis} from "./apis";
-import {Authorization} from "./components/Authorization";
-import ApiScrollview from "./components/ApiScrollview";
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useLocation, useHistory } from 'react-router-dom'
+import React, { useCallback, useEffect, useState } from 'react'
+import { apis } from './apis'
+import { Authorization } from './components/Authorization'
+import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
-let once = 0; // to prevent increasing number of event listeners being added
+
+let once = 0 // to prevent increasing number of event listeners being added
 
 function App() {
-    const history = useHistory();
-    const location = useLocation();
-    const [error, setError] = useState(null);
-    const [user, setUser] = useState(null);
-    const [participant, setParticipant] = useState(null);
-    const [runningContext, setRunningContext] = useState(null);
-    const [connected, setConnected] = useState(false);
-    const [counter, setCounter] = useState(0);
-    const [preMeeting, setPreMeeting] = useState(true); // start with pre-meeting code
-    const [userContextStatus, setUserContextStatus] = useState("");
+    const history = useHistory()
+    const location = useLocation()
+    const [error, setError] = useState(null)
+    const [user, setUser] = useState(null)
+    const [participant, setParticipant] = useState(null)
+    const [runningContext, setRunningContext] = useState(null)
+    const [connected, setConnected] = useState(false)
+    const [counter, setCounter] = useState(0)
+    const [preMeeting, setPreMeeting] = useState(true) // start with pre-meeting code
+    const [userContextStatus, setUserContextStatus] = useState('')
+    const [mode, setMode] = useState(false)
 
     useEffect(() => {
         async function configureSdk() {
             // to account for the 2 hour timeout for config
             const configTimer = setTimeout(() => {
-                setCounter(counter + 1);
-            }, 120 * 60 * 1000);
+                setCounter(counter + 1)
+            }, 120 * 60 * 1000)
 
             try {
                 // Configure the JS SDK, required to call JS APIs in the Zoom App
@@ -37,174 +38,188 @@ function App() {
                         ...apis.map((api) => api.name), // IMPORTANT
 
                         // demo events
-                        "onSendAppInvitation",
-                        "onShareApp",
-                        "onActiveSpeakerChange",
-                        "onMeeting",
+                        'onSendAppInvitation',
+                        'onShareApp',
+                        'onActiveSpeakerChange',
+                        'onMeeting',
 
                         // connect api and event
-                        "connect",
-                        "onConnect",
-                        "postMessage",
-                        "onMessage",
+                        'connect',
+                        'onConnect',
+                        'postMessage',
+                        'onMessage',
 
                         // in-client api and event
-                        "authorize",
-                        "onAuthorized",
-                        "promptAuthorize",
-                        "getUserContext",
-                        "onMyUserContextChange",
-                        "sendAppInvitationToAllParticipants",
-                        "sendAppInvitation",
+                        'authorize',
+                        'onAuthorized',
+                        'promptAuthorize',
+                        'getUserContext',
+                        'onMyUserContextChange',
+                        'sendAppInvitationToAllParticipants',
+                        'sendAppInvitation',
                     ],
-                    version: "0.16.0",
-                });
-                console.log("App configured", configResponse);
+                    version: '0.16.0',
+                })
+                console.log('App configured', configResponse)
                 // The config method returns the running context of the Zoom App
-                setRunningContext(configResponse.runningContext);
-                setUserContextStatus(configResponse.auth.status);
+                setRunningContext(configResponse.runningContext)
+                setUserContextStatus(configResponse.auth.status)
+                console.log('configResponse.auth.status', configResponse.auth.status)
                 zoomSdk.onSendAppInvitation((data) => {
-                    console.log(data);
-                });
+                    console.log(data)
+                })
                 zoomSdk.onShareApp((data) => {
-                    console.log(data);
-                });
+                    console.log(data)
+                })
             } catch (error) {
-                console.log(error);
-                setError("There was an error configuring the JS SDK");
+                console.log(error)
+                setError('There was an error configuring the JS SDK')
             }
             return () => {
-                clearTimeout(configTimer);
-            };
+                clearTimeout(configTimer)
+            }
         }
 
-        configureSdk();
-    }, [counter]);
+        configureSdk()
+    }, [counter])
 
     // PRE-MEETING
     let on_message_handler_client = useCallback(
         (message) => {
-            let content = message.payload.payload;
-            if (content === "connected" && preMeeting === true) {
-                console.log("Meeting instance exists.");
-                zoomSdk.removeEventListener("onMessage", on_message_handler_client);
-                console.log("Letting meeting instance know client's current state.");
-                sendMessage(window.location.hash, "client");
-                setPreMeeting(false); // client instance is finished with pre-meeting
+            let content = message.payload.payload
+            if (content === 'connected' && preMeeting === true) {
+                console.log('Meeting instance exists.')
+                zoomSdk.removeEventListener('onMessage', on_message_handler_client)
+                console.log('Letting meeting instance know client\'s current state.')
+                sendMessage(window.location.hash, 'client')
+                setPreMeeting(false) // client instance is finished with pre-meeting
             }
         },
-        [preMeeting]
-    );
+        [preMeeting],
+    )
 
     // PRE-MEETING
     useEffect(() => {
-        if (runningContext === "inMainClient" && preMeeting === true) {
-            zoomSdk.addEventListener("onMessage", on_message_handler_client);
+        if (runningContext === 'inMainClient' && preMeeting === true) {
+            zoomSdk.addEventListener('onMessage', on_message_handler_client)
         }
-    }, [on_message_handler_client, preMeeting, runningContext]);
+    }, [on_message_handler_client, preMeeting, runningContext])
 
     async function sendMessage(msg, sender) {
         console.log(
-            "Message sent from " + sender + " with data: " + JSON.stringify(msg)
-        );
-        console.log("Calling postmessage...", msg);
+            'Message sent from ' + sender + ' with data: ' + JSON.stringify(msg),
+        )
+        console.log('Calling postmessage...', msg)
         await zoomSdk.postMessage({
             payload: msg,
-        });
+        })
     }
 
     const receiveMessage = useCallback(
-        (receiver, reason = "") => {
+        (receiver, reason = '') => {
             let on_message_handler = (message) => {
-                let content = message.payload.payload;
+                let content = message.payload.payload
                 console.log(
-                    "Message received " + receiver + " " + reason + ": " + content
-                );
-                history.push({pathname: content});
-            };
+                    'Message received ' + receiver + ' ' + reason + ': ' + content,
+                )
+                history.push({ pathname: content })
+            }
             if (once === 0) {
-                zoomSdk.addEventListener("onMessage", on_message_handler);
-                once = 1;
+                zoomSdk.addEventListener('onMessage', on_message_handler)
+                once = 1
             }
         },
-        [history]
-    );
+        [history],
+    )
 
     useEffect(() => {
         async function connectInstances() {
             // only can call connect when in-meeting
-            if (runningContext === "inMeeting") {
-                zoomSdk.addEventListener("onConnect", (event) => {
-                    console.log("Connected");
-                    setConnected(true);
+            if (runningContext === 'inMeeting') {
+                zoomSdk.addEventListener('onConnect', (event) => {
+                    console.log('Connected')
+                    setConnected(true)
 
                     // PRE-MEETING
                     // first message to send after connecting instances is for the meeting
                     // instance to catch up with the client instance
                     if (preMeeting === true) {
-                        console.log("Letting client know meeting instance exists.");
-                        sendMessage("connected", "meeting");
-                        console.log("Adding message listener for client's current state.");
+                        console.log('Letting client know meeting instance exists.')
+                        sendMessage('connected', 'meeting')
+                        console.log('Adding message listener for client\'s current state.')
                         let on_message_handler_mtg = (message) => {
                             console.log(
-                                "Message from client received. Meeting instance updating its state:",
-                                message.payload.payload
-                            );
-                            window.location.replace(message.payload.payload);
-                            zoomSdk.removeEventListener("onMessage", on_message_handler_mtg);
-                            setPreMeeting(false); // meeting instance is finished with pre-meeting
-                        };
-                        zoomSdk.addEventListener("onMessage", on_message_handler_mtg);
+                                'Message from client received. Meeting instance updating its state:',
+                                message.payload.payload,
+                            )
+                            window.location.replace(message.payload.payload)
+                            zoomSdk.removeEventListener('onMessage', on_message_handler_mtg)
+                            setPreMeeting(false) // meeting instance is finished with pre-meeting
+                        }
+                        zoomSdk.addEventListener('onMessage', on_message_handler_mtg)
                     }
-                });
+                })
 
-                await zoomSdk.connect();
-                console.log("Connecting...");
+                await zoomSdk.connect()
+                console.log('Connecting...')
             }
         }
 
         if (connected === false) {
-            console.log(runningContext, location.pathname);
-            connectInstances();
+            console.log(runningContext, location.pathname)
+            connectInstances()
         }
-    }, [connected, location.pathname, preMeeting, runningContext]);
+    }, [connected, location.pathname, preMeeting, runningContext])
 
     // POST-MEETING
     useEffect(() => {
         async function communicateTabChange() {
             // only proceed with post-meeting after pre-meeting is done
             // just one-way communication from in-meeting to client
-            if (runningContext === "inMeeting" && connected && preMeeting === false) {
-                sendMessage(location.pathname, runningContext);
-            } else if (runningContext === "inMainClient" && preMeeting === false) {
-                receiveMessage(runningContext, "for tab change");
+            if (runningContext === 'inMeeting' && connected && preMeeting === false) {
+                sendMessage(location.pathname, runningContext)
+            } else if (runningContext === 'inMainClient' && preMeeting === false) {
+                receiveMessage(runningContext, 'for tab change')
             }
         }
 
-        communicateTabChange();
-    }, [connected, location, preMeeting, receiveMessage, runningContext]);
+        communicateTabChange()
+    }, [connected, location, preMeeting, receiveMessage, runningContext])
 
+    const handleMode = () => {
+        setMode((prevMode) => !prevMode)
+
+        if (document.querySelector('body').dataset.theme === 'dark') {
+            document.body.dataset.theme = 'light'
+        } else {
+            document.body.dataset.theme = 'dark'
+        }
+    }
     if (error) {
-        console.log(error);
+        console.log(error)
         return (
             <div className="App">
                 <h1>{error.message}</h1>
             </div>
-        );
+        )
     }
+    const lightImage= 'https://images.unsplash.com/photo-1630148180214-417337ce9652?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    const darkImage = 'https://images.unsplash.com/photo-1460910996094-e71452a43cb0?q=80&w=1957&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 
     return (
         <div className="App">
-            <h1>행복메타{user ? ` ${user.first_name} ${user.last_name}` : " 출석 체크 앱"}!</h1>
-            <p>{`User Context Status: ${userContextStatus}`}</p>
-            <p>
-                {runningContext ?
-                    `Running Context: ${runningContext}` :
-                    "Configuring Zoom JavaScript SDK..."
-                }
-            </p>
+            <div
+                className="sunMoon"
+                style={{ color: mode ? '#252525' : 'white' }}
+                onClick={handleMode}
+            >
+                {mode ? '😎' : '😊'}
+            </div>
+            {/*<img*/}
+            {/*    className="sunMoon" src={mode ? darkImage : lightImage} alt="dark_light mode"*/}
+            {/*    style={{ color: mode ? '#252525' : 'white' }}*/}
+            {/*    onClick={handleMode} />*/}
 
-            {/*<ApiScrollview/>*/}
             <Authorization
                 handleError={setError}
                 handleUserContextStatus={setUserContextStatus}
@@ -214,9 +229,9 @@ function App() {
                 participant={participant}
                 userContextStatus={userContextStatus}
             />
-
         </div>
-    );
+    )
+
 }
 
-export default App;
+export default App
