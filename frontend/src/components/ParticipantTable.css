@@ -1,0 +1,343 @@
+.app_body {
+    width: 100vw;
+    height: 100vh;
+}
+
+.title {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    white-space: nowrap;
+
+    z-index: 1;
+    animation: first 2s forwards;
+}
+
+@keyframes first {
+    0% {
+        height: 100vh;
+        width: 100vw;
+        background-color: #0f72ed;
+    }
+    30% {
+        height: 100vh;
+        width: 100vw;
+    }
+    60% {
+        height: 40px;
+        width: 100vw;
+        background-color: #0f72ed;
+        border-radius: 0;
+    }
+    100% {
+        height: 40px;
+        width: 160px;
+        border-radius: 20px;
+        background-color: transparent;
+    }
+}
+
+.sunMoon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: white;
+    font-size: 30px;
+    transition: 0.3s;
+    cursor: pointer;
+    user-select: none;
+}
+
+.sunMoon:hover {
+    transform: rotate(360deg);
+}
+
+.main_body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    padding-top: 100px;
+}
+
+.print_button {
+    width: 50vw;
+    height: 40px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background-color: #0f72ed;
+    color: white;
+    white-space: nowrap;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.print_button:hover {
+    border: 1px solid #0f72ed;
+    background-color: #dee9f7;
+    color: #0f72ed !important;
+
+    font-weight: bold;
+}
+
+#btnAni {
+    animation: widthChange 0.5s ease-out;
+}
+
+@keyframes widthChange {
+    0% {
+        width: 50vw;
+    }
+    50% {
+        width: 20vw;
+        opacity: 0;
+    }
+    100% {
+        width: 50vw;
+    }
+}
+
+.date {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+    height: 30px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background-color: transparent;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.date:hover {
+    color: #0f72ed;
+    border-color: #0f72ed;
+}
+
+#dateAni {
+    animation: dateAni 0.5s both ease-out;
+}
+
+@keyframes dateAni {
+    50% {
+        color: #0f72ed;
+        border-color: #0f72ed;
+    }
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+    height: 9vw;
+    max-height: 35px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.search_form {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 98%;
+    height: 72%;
+}
+
+.search_input {
+    width: 60%;
+    height: 100%;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.search_input:focus {
+    width: 65%;
+    border: 1px solid #0f72ed;
+}
+
+.search_btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    height: 28px;
+    border: 1px solid gray;
+    border-radius: 6px;
+    background-color: #0f72ed;
+    color: white;
+    font-size: clamp(10px, 2vw, 15px);
+    white-space: nowrap;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.search_btn:hover {
+    background-color: white !important;
+    color: #0f72ed !important;
+    font-weight: bold;
+}
+
+.table_container {
+    position: relative;
+    max-height: 53vh;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 5px 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-shadow: inset 0px -2px 3px 0px gray;
+    display: none;
+}
+
+.tableVisible {
+    display: block !important;
+    animation: tableVisible 3s;
+}
+
+@keyframes tableVisible {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+table {
+    padding: 3px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.15);
+    transition: 0.5s;
+}
+
+thead {
+    position: sticky;
+    top: 0px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 0 10px;
+    background-color: rgb(175, 175, 175);
+    z-index: 1;
+}
+
+th {
+    user-select: none;
+    position: relative;
+    width: 70px;
+    height: 15px;
+    padding-top: 3px;
+    border: 1px solid gray;
+    /*border-radius: 3px;*/
+    margin: 1px;
+    font-size: clamp(12px, 2vw, 20px);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+th:hover,
+td:hover {
+    color: orange;
+    border-color: #0f72ed;
+}
+
+.swap_vert {
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10px;
+    height: 15px;
+    font-size: clamp(12px, 2vw, 20px);
+    font-weight: bold;
+    visibility: hidden;
+}
+
+th:nth-child(1) {
+    min-width: 45px;
+}
+
+th:nth-child(1):hover .swap_vert {
+    visibility: visible !important;
+}
+
+td {
+    width: 70px;
+    padding: 0;
+    border: 1px solid gray;
+    border-radius: 3px;
+    font-size: clamp(12px, 1.5vw, 18px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.cell-check-list {
+    border: 1px solid gray;
+}
+.numExplanation {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 50vw;
+    max-width: 676px;
+    height: 30px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    background-color: rgb(0 0 0 / 20%);
+    margin-bottom: 5px;
+}
+
+.numExp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 13vw;
+    max-width: 215px;
+    height: 18px;
+    padding-top: 1px;
+    border: 1px solid rgb(70, 70, 70);
+    border-radius: 7px;
+    font-size: clamp(10px, 2vw, 15px);
+    background-color: rgb(0 0 0 / 10%);
+    text-align: center;
+}
+
+.numExp:nth-child(1):hover {
+    background-color: rgb(0 222 0 / 90%);
+}
+
+.numExp:nth-child(2):hover {
+    background-color: orange;
+}
+
+.numExp:nth-child(3):hover {
+    background-color: red;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    font-size: 13px;
+    color: gray;
+}

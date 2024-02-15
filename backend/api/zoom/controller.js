@@ -16,6 +16,10 @@ module.exports = {
                 'ZOOM API UserHandleProxy ==============================================',
                 '\n'
             )
+            console.log('basic request getheaders: ', req.headers)
+            console.log('basic response getheaders: ', res.getHeaders())
+            console.log('basic just headers: ', res.headers)
+            console.log('proxyres headers: ', proxyRes.headers)
             var body = []
             proxyRes
                 .on('error', (err) => {
@@ -37,7 +41,14 @@ module.exports = {
                             }
                         )
                         body = processDataResponse.data
-                        console.log(`Zoom API Proxy => participant`)
+                        console.log(
+                            `processDataResponse just headers`,
+                            processDataResponse.headers
+                        )
+                        console.log(
+                            `processDataResponse getheaders`,
+                            processDataResponse.headers
+                        )
                     } catch (error) {
                         console.error(error)
                         res.status(500).json({

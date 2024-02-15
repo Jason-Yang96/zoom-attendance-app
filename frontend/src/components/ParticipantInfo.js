@@ -1,5 +1,7 @@
-import Button from "react-bootstrap/Button";
-import "./ParticipantInfo.css"
+import Button from 'react-bootstrap/Button'
+import './ParticipantInfo.css'
+import { ParticipantTable } from './ParticipantTable'
+
 
 function ParticipantInfo(props) {
     const {
@@ -8,7 +10,7 @@ function ParticipantInfo(props) {
         showGuestModePrompt,
         onClick,
         userContextStatus,
-    } = props;
+    } = props
 
     if (showInClientOAuthPrompt) {
         // no user and not waiting for in-client authorize to complete
@@ -33,16 +35,16 @@ function ParticipantInfo(props) {
                     authorize
                 </Button>
             </>
-        );
+        )
     } else if (showGuestModePrompt) {
-        let bodyText;
+        let bodyText
 
-        if (userContextStatus === "unauthenticated")
+        if (userContextStatus === 'unauthenticated')
             bodyText =
-                "This user is unauthenticated. Zoom does not know the user, and only some Zoom App APIs are allowed.  Invoking promptAuthorize will ask the user to log in to Zoom";
-        else if (userContextStatus === "authenticated")
+                'This user is unauthenticated. Zoom does not know the user, and only some Zoom App APIs are allowed.  Invoking promptAuthorize will ask the user to log in to Zoom'
+        else if (userContextStatus === 'authenticated')
             bodyText =
-                "This user is authenticated, but they have not yet added the app and/or consented to app scopes.  Invoke promptAuthorize once more to ask the authenticated user to consent and add the app (this will invoke the In-client OAuth flow).";
+                'This user is authenticated, but they have not yet added the app and/or consented to app scopes.  Invoke promptAuthorize once more to ask the authenticated user to consent and add the app (this will invoke the In-client OAuth flow).'
 
         return (
             <>
@@ -51,18 +53,21 @@ function ParticipantInfo(props) {
                 <p>Not all APIs will be available in Guest Mode</p>
                 <Button onClick={onClick}>promptAuthorize</Button>
             </>
-        );
+        )
     } else if (!participant) {
         // loading user (first attempt to fetch user will fail if
         // no access token/ in-client add)
-        return <p className="p-loading">Loading Zoom Participant . . .</p>;
+        return <p className="p-loading">Zoom 출석부를 불러오는 중입니다. 들숨 and 날숨 두번씩만 반복해주세요.</p>
     }
 
     return (
-        <div>
-            <pre className="pre-userinfo">{JSON.stringify(participant, null, 2)}</pre>
-        </div>
-    );
+        <>
+            <ParticipantTable
+                participant={participant}
+            >
+            </ParticipantTable>
+        </>
+    )
 }
 
-export default ParticipantInfo;
+export default ParticipantInfo

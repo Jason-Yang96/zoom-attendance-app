@@ -1,3 +1,5 @@
+
+
 .App {
   padding: 20px;
   margin-bottom: 200px;
@@ -30,6 +32,46 @@ Button {
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-iframe {
-  border: 1px solid black;
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+.sunMoon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: white;
+    font-size: 30px;
+    transition: 0.3s;
+    cursor: pointer;
+    user-select: none;
+}
+
+.sunMoon:hover {
+    transform: rotate(360deg);
 }
