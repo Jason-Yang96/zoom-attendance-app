@@ -203,8 +203,8 @@ function App() {
             </div>
         )
     }
-    const lightImage= 'https://images.unsplash.com/photo-1630148180214-417337ce9652?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-    const darkImage = 'https://images.unsplash.com/photo-1460910996094-e71452a43cb0?q=80&w=1957&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    // const lightImage= 'https://images.unsplash.com/photo-1630148180214-417337ce9652?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    // const darkImage = 'https://images.unsplash.com/photo-1460910996094-e71452a43cb0?q=80&w=1957&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 
     return (
         <div className="App">
@@ -213,7 +213,7 @@ function App() {
                 style={{ color: mode ? '#252525' : 'white' }}
                 onClick={handleMode}
             >
-                {mode ? '😎' : '😊'}
+                {mode ? '🌙' : '🔅'}
             </div>
             {/*<img*/}
             {/*    className="sunMoon" src={mode ? darkImage : lightImage} alt="dark_light mode"*/}

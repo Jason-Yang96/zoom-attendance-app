@@ -7,7 +7,7 @@ function App() {
             <header className="App-header">
                 <a
                     className="App-link"
-                    href="https://ba84-116-41-81-138.ngrok-free.app/api/zoomapp/install"
+                    href="https://b069-116-41-81-138.ngrok-free.app/api/zoomapp/install"
                     target="_blank"
                     rel="noopener noreferrer"
                 >

@@ -18,7 +18,7 @@ const getZoomAccessToken = async (
 
     const tokenRequestParamString = zoomHelpers.createRequestParamString(params)
 
-    return await axios({
+    return axios({
         url: `${process.env.ZOOM_HOST}/oauth/token`,
         method: 'POST',
         headers: {
@@ -37,7 +37,7 @@ const refreshZoomAccessToken = async (zoomRefreshToken) => {
     searchParams.set('grant_type', 'refresh_token')
     searchParams.set('refresh_token', zoomRefreshToken)
 
-    return await axios({
+    return axios({
         url: `${process.env.ZOOM_HOST}/oauth/token?${searchParams.toString()}`,
         method: 'POST',
         auth: {
@@ -48,7 +48,7 @@ const refreshZoomAccessToken = async (zoomRefreshToken) => {
 }
 
 const getZoomUser = async (accessToken) => {
-    return await axios({
+    return axios({
         url: `${process.env.ZOOM_HOST}/v2/users/me`,
         method: 'GET',
         headers: {
@@ -59,7 +59,7 @@ const getZoomUser = async (accessToken) => {
 }
 
 const getZoomParticipant = async (accessToken) => {
-    return await axios({
+    return axios({
         url: `${process.env.ZOOM_HOST}/v2/report/meetings/
 84143883166/participants`,
         method: 'GET',
@@ -71,7 +71,7 @@ const getZoomParticipant = async (accessToken) => {
 }
 
 const getDeeplink = async (accessToken) => {
-    return await axios({
+    return axios({
         url: `${process.env.ZOOM_HOST}/v2/zoomapp/deeplink`,
         method: 'POST',
         headers: {

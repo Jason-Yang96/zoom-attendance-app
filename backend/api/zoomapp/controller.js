@@ -74,7 +74,7 @@ module.exports = {
 
             console.log(
                 '2c. Use access token to get Zoom user - response data: ',
-                userResponse.data,
+                userResponse.headers,
                 '\n'
             )
 
